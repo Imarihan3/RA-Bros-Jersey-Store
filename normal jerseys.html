@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Normal Jerseys</title>
+<style>
+body { margin:0; font-family:Arial; background:#f5f5f5; }
+header { text-align:center; padding:20px; background:#111; color:white; }
+.grid { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; padding:40px; }
+.card { background:white; padding:15px; border-radius:10px; width:250px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+.placeholder { height:250px; background:#ddd; border-radius:10px; display:flex; align-items:center; justify-content:center; }
+.btn { margin-top:10px; padding:10px; border:none; border-radius:8px; background:#111; color:white; cursor:pointer; }
+</style>
+</head>
+<body>
+<header><h1>🛍️ Everyday Jerseys</h1></header>
+<div class="grid">
+
+<!-- 20 NORMAL JERSEYS -->
+<script>
+const names = [
+"Classic Home","Away White","Blue Strike","Red Force","Urban Fit","Street Pro","Elite Black","Royal Blue","Sunset Orange","Forest Green",
+"Storm Grey","Ocean Wave","Night Mode","Retro Gold","Flash Pink","Carbon Core","Skyline","Ice Blue","Shadow Fit","Victory Kit"
+];
+
+names.forEach(n=>{
+ document.write(`<div class='card'><div class='placeholder'>JERSEY</div><p>${n}</p><button class='btn' onclick="addToCart('${n}')">Add</button></div>`);
+});
+
+function addToCart(item){
+ let cart = JSON.parse(localStorage.getItem('cart')) || [];
+ cart.push(item);
+ localStorage.setItem('cart', JSON.stringify(cart));
+ alert(item + " added 🛒");
+}
+</script>
+
+</div>
+</body>
+</html>

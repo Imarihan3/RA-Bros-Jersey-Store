@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Limited Jerseys</title>
+<style>
+body { margin:0; font-family:Arial; background:#0f0f0f; color:white; }
+header { text-align:center; padding:20px; background:#000; }
+.grid { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; padding:40px; }
+.card { background:#1a1a1a; padding:15px; border-radius:12px; width:260px; text-align:center; position:relative; box-shadow:0 0 15px rgba(255,0,80,0.4); transition:0.3s; }
+.card:hover { transform:translateY(-6px); box-shadow:0 0 30px rgba(255,0,80,0.8); }
+.placeholder { height:260px; border-radius:10px; background:linear-gradient(135deg,#1f1f1f,#2a2a2a); display:flex; align-items:center; justify-content:center; color:#aaa; }
+.badge { position:absolute; top:10px; left:10px; background:#ff0033; padding:5px 10px; font-size:12px; border-radius:6px; }
+.btn { margin-top:10px; padding:10px; border:none; border-radius:8px; background:#ff0033; color:white; cursor:pointer; }
+</style>
+</head>
+<body>
+<header><h1>🔥 Limited Drops</h1></header>
+<div class="grid">
+
+<!-- 6 LIMITED JERSEYS -->
+<div class="card"><span class="badge">LIMITED</span><div class="placeholder">JERSEY</div><p>Phantom Black Kit</p><button class="btn" onclick="addToCart('Phantom Black Kit')">Add</button></div>
+<div class="card"><span class="badge">RARE</span><div class="placeholder">JERSEY</div><p>Crimson Storm</p><button class="btn" onclick="addToCart('Crimson Storm')">Add</button></div>
+<div class="card"><span class="badge">DROP</span><div class="placeholder">JERSEY</div><p>Neon Pulse</p><button class="btn" onclick="addToCart('Neon Pulse')">Add</button></div>
+<div class="card"><span class="badge">LIMITED</span><div class="placeholder">JERSEY</div><p>Shadow Core</p><button class="btn" onclick="addToCart('Shadow Core')">Add</button></div>
+<div class="card"><span class="badge">RARE</span><div class="placeholder">JERSEY</div><p>Gold Strike</p><button class="btn" onclick="addToCart('Gold Strike')">Add</button></div>
+<div class="card"><span class="badge">DROP</span><div class="placeholder">JERSEY</div><p>Ice Phantom</p><button class="btn" onclick="addToCart('Ice Phantom')">Add</button></div>
+
+</div>
+<script>
+function addToCart(item){
+ let cart = JSON.parse(localStorage.getItem('cart')) || [];
+ cart.push(item);
+ localStorage.setItem('cart', JSON.stringify(cart));
+ alert(item + " added 🛒");
+}
+</script>
+</body>
+</html>

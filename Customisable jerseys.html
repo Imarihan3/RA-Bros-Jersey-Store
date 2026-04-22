@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Custom Jersey Builder</title>
+<style>
+body { margin:0; font-family:Arial; background:#0f0f0f; color:white; }
+header { text-align:center; padding:20px; background:#000; }
+
+.container {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:30px;
+  padding:40px;
+}
+
+.builder {
+  background:#1a1a1a;
+  padding:20px;
+  border-radius:12px;
+  width:300px;
+  box-shadow:0 0 15px rgba(255,0,80,0.3);
+}
+
+.preview {
+  height:250px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#1f1f1f,#2a2a2a);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:15px;
+  text-align:center;
+}
+
+.option-group {
+  margin-bottom:15px;
+}
+
+.option-group p {
+  margin:5px 0;
+}
+
+.btn {
+  padding:8px 12px;
+  margin:3px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  background:#333;
+  color:white;
+}
+
+.btn:hover {
+  background:#ff0033;
+}
+
+.btn-primary {
+  width:100%;
+  margin-top:10px;
+  background:#ff0033;
+}
+
+input {
+  width:100%;
+  padding:8px;
+  border-radius:6px;
+  border:none;
+  margin-top:5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🎨 Custom Jersey Builder</h1>
+<p>Create your own drip</p>
+</header>
+
+<div class="container">
+
+<div class="builder">
+
+<div class="preview" id="preview">
+  Your Jersey
+</div>
+
+<!-- COLOR -->
+<div class="option-group">
+<p>Color:</p>
+<button class="btn" onclick="setOption('color','Black')">Black</button>
+<button class="btn" onclick="setOption('color','Red')">Red</button>
+<button class="btn" onclick="setOption('color','Blue')">Blue</button>
+</div>
+
+<!-- STYLE -->
+<div class="option-group">
+<p>Style:</p>
+<button class="btn" onclick="setOption('style','Home')">Home</button>
+<button class="btn" onclick="setOption('style','Away')">Away</button>
+<button class="btn" onclick="setOption('style','Street')">Street</button>
+</div>
+
+<!-- NUMBER -->
+<div class="option-group">
+<p>Number:</p>
+<input type="number" id="number" placeholder="Enter number" oninput="updatePreview()">
+</div>
+
+<!-- NAME -->
+<div class="option-group">
+<p>Name:</p>
+<input type="text" id="name" placeholder="Enter name" oninput="updatePreview()">
+</div>
+
+<button class="btn btn-primary" onclick="addToCart()">Add Custom Jersey 🛒</button>
+
+</div>
+
+</div>
+
+<script>
+let jersey = {
+  color: '',
+  style: '',
+  number: '',
+  name: ''
+};
+
+function setOption(type, value) {
+  jersey[type] = value;
+  updatePreview();
+}
+
+function updatePreview() {
+  jersey.number = document.getElementById('number').value;
+  jersey.name = document.getElementById('name').value;
+
+  document.getElementById('preview').innerText =
+    `${jersey.color} ${jersey.style}\n${jersey.name} #${jersey.number}`;
+}
+
+function addToCart() {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cart.push(jersey);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  alert("Custom jersey added 🛒");
+}
+</script>
+
+</body>
+</html>
