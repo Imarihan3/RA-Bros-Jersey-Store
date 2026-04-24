@@ -3,54 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <title>Normal Jerseys</title>
+
 <style>
 body { margin:0; font-family:Arial; background:#f5f5f5; }
-header { text-align:center; padding:20px; background:#111; color:white; }
-.grid { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; padding:40px; }
-.card { background:white; padding:15px; border-radius:10px; width:250px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
-.placeholder { height:250px; background:#ddd; border-radius:10px; display:flex; align-items:center; justify-content:center; }
-.btn { margin-top:10px; padding:10px; border:none; border-radius:8px; background:#111; color:white; cursor:pointer; }
+
+header {
+  text-align:center;
+  padding:20px;
+  background:#111;
+  color:white;
+}
+
+.cart-btn {
+  margin-top:10px;
+  padding:10px 15px;
+  border:none;
+  border-radius:8px;
+  background:#ff9800;
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.grid {
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  justify-content:center;
+  padding:40px;
+}
+
+.card {
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  width:250px;
+  text-align:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.placeholder {
+  height:250px;
+  background:#ddd;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.btn {
+  margin-top:10px;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(45deg,#111,#444);
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.3s;
+}
+
+.btn:hover {
+  background:linear-gradient(45deg,#444,#000);
+  transform:scale(1.05);
+}
 </style>
 </head>
-<body>
-<header><h1>🛍️ Everyday Jerseys</h1></header>
-<div class="grid">
 
-<!-- 20 NORMAL JERSEYS -->
+<body>
+
+<header>
+  <h1>🛍️ Everyday Jerseys</h1>
+  <button class="cart-btn" onclick="location.href='cart.html'">🛒 View Cart</button>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<!-- CREATE JERSEYS -->
 <script>
 const names = [
 "Classic Home","Away White","Blue Strike","Red Force","Urban Fit","Street Pro","Elite Black","Royal Blue","Sunset Orange","Forest Green",
 "Storm Grey","Ocean Wave","Night Mode","Retro Gold","Flash Pink","Carbon Core","Skyline","Ice Blue","Shadow Fit","Victory Kit"
 ];
 
-names.forEach(n=>{
- document.write(`<div class='card'><div class='placeholder'>JERSEY</div><p>${n}</p><button class='btn' onclick="addToCart('${n}')">Add</button></div>`);
-});
+const grid = document.getElementById("grid");
 
-function addToCart(item){
- let cart = JSON.parse(localStorage.getItem('cart')) || [];
- cart.push(item);
- localStorage.setItem('cart', JSON.stringify(cart));
- alert(item + " added 🛒");
-}
+names.forEach(n => {
+  grid.innerHTML += `
+    <div class="card">
+      <div class="placeholder">JERSEY</div>
+      <p>${n}</p>
+      <button class="btn" onclick="addToCart('${n}')">Add to Cart</button>
+    </div>
+  `;
+});
 </script>
 
-</div>
+<!-- FIREBASE CONNECTION -->
 <script type="module">
 import { addItem } from "./firebase.js";
 
 window.addToCart = async function(item) {
-  console.log("Button clicked:", item);
+  console.log("Clicked:", item);
 
   try {
     await addItem(item);
-    console.log("Saved to Firestore ✅");
-    alert("Saved ✅");
+    alert(item + " added 🛒");
   } catch (e) {
-    console.error("ERROR:", e);
-    alert("Error ❌");
+    console.error(e);
+    alert("Error saving ❌");
   }
 };
 </script>
+
 </body>
 </html>
