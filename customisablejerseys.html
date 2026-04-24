@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Custom Jersey Builder</title>
+
 <style>
 body { margin:0; font-family:Arial; background:#0f0f0f; color:white; }
 header { text-align:center; padding:20px; background:#000; }
@@ -34,13 +35,8 @@ header { text-align:center; padding:20px; background:#000; }
   text-align:center;
 }
 
-.option-group {
-  margin-bottom:15px;
-}
-
-.option-group p {
-  margin:5px 0;
-}
+.option-group { margin-bottom:15px; }
+.option-group p { margin:5px 0; }
 
 .btn {
   padding:8px 12px;
@@ -52,9 +48,7 @@ header { text-align:center; padding:20px; background:#000; }
   color:white;
 }
 
-.btn:hover {
-  background:#ff0033;
-}
+.btn:hover { background:#ff0033; }
 
 .btn-primary {
   width:100%;
@@ -69,7 +63,6 @@ input {
   border:none;
   margin-top:5px;
 }
-
 </style>
 </head>
 
@@ -78,6 +71,9 @@ input {
 <header>
 <h1>🎨 Custom Jersey Builder</h1>
 <p>Create your own drip</p>
+<button onclick="location.href='cart.html'" style="margin-top:10px;padding:10px;border:none;border-radius:8px;background:#ff9800;color:white;cursor:pointer;">
+🛒 View Cart
+</button>
 </header>
 
 <div class="container">
@@ -85,7 +81,7 @@ input {
 <div class="builder">
 
 <div class="preview" id="preview">
-  Your Jersey
+Your Jersey
 </div>
 
 <!-- COLOR -->
@@ -119,10 +115,12 @@ input {
 <button class="btn btn-primary" onclick="addToCart()">Add Custom Jersey 🛒</button>
 
 </div>
-
 </div>
 
-<script>
+<!-- FIREBASE + LOGIC -->
+<script type="module">
+import { addItem } from "./firebase.js";
+
 let jersey = {
   color: '',
   style: '',
@@ -130,38 +128,31 @@ let jersey = {
   name: ''
 };
 
-function setOption(type, value) {
+window.setOption = function(type, value) {
   jersey[type] = value;
   updatePreview();
-}
+};
 
-function updatePreview() {
+window.updatePreview = function() {
   jersey.number = document.getElementById('number').value;
   jersey.name = document.getElementById('name').value;
 
   document.getElementById('preview').innerText =
     `${jersey.color} ${jersey.style}\n${jersey.name} #${jersey.number}`;
-}
+};
 
-function addToCart() {
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  cart.push(jersey);
-  localStorage.setItem('cart', JSON.stringify(cart));
-  alert("Custom jersey added 🛒");
-}
-</script>
-<script type="module">
-import { addItem } from "./firebase.js";
-
-window.addToCart = async function(item) {
-  console.log("Button clicked:", item);
-
+window.addToCart = async function() {
   try {
-    await addItem(item);
-    console.log("Saved to Firestore ✅");
-    alert("Saved ✅");
+    const itemString =
+      `${jersey.color} ${jersey.style} | ${jersey.name} #${jersey.number}`;
+
+    await addItem(itemString);
+
+    console.log("Saved:", itemString);
+    alert("Custom jersey saved 🛒🔥");
+
   } catch (e) {
-    console.error("ERROR:", e);
+    console.error(e);
     alert("Error ❌");
   }
 };
@@ -169,5 +160,3 @@ window.addToCart = async function(item) {
 
 </body>
 </html>
-
-
