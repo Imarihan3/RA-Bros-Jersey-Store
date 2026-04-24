@@ -66,19 +66,28 @@
             setupJoystick();
         }
 
-        // --- JOYSTICK LOGIC ---
+        // --- FIXED JOYSTICK LOGIC FOR ANDROID ---
         function setupJoystick() {
             const container = document.getElementById('joystick-container');
             const knob = document.getElementById('joystick-knob');
-            const rect = container.getBoundingClientRect();
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
+            
+            // We get the rect dynamically to ensure coordinates stay accurate
+            let rect = container.getBoundingClientRect();
+            const centerX = 60; // 120 / 2
+            const centerY = 60; // 120 / 2
 
             function handleMove(e) {
                 if (!isMoving) return;
-                const touch = e.touches ? e.touches : e;
-                let x = touch.clientX - rect.left - centerX;
-                let y = touch.clientY - rect.top - centerY;
+                
+                // Block Android from scrolling while playing
+                if (e.cancelable) e.preventDefault();
+
+                // Handle both Touch and Mouse coordinates
+                const clientX = e.touches ? e.touches.clientX : e.clientX;
+                const clientY = e.touches ? e.touches.clientY : e.clientY;
+
+                let x = clientX - rect.left - centerX;
+                let y = clientY - rect.top - centerY;
                 
                 const distance = Math.min(Math.sqrt(x*x + y*y), 50);
                 const angle = Math.atan2(y, x);
@@ -90,22 +99,33 @@
                 joyPos = { x: x / 50, y: y / 50 };
             }
 
-            container.addEventListener('touchstart', () => isMoving = true);
+            // TOUCH EVENTS (ANDROID/IOS)
+            container.addEventListener('touchstart', (e) => {
+                isMoving = true;
+                rect = container.getBoundingClientRect(); // Update rect on touch
+                handleMove(e);
+            }, {passive: false});
+
+            window.addEventListener('touchmove', handleMove, {passive: false});
+
             window.addEventListener('touchend', () => {
                 isMoving = false;
                 knob.style.transform = `translate(0px, 0px)`;
                 joyPos = { x: 0, y: 0 };
+            }, {passive: false});
+
+            // MOUSE EVENTS (PC)
+            container.addEventListener('mousedown', (e) => {
+                isMoving = true;
+                rect = container.getBoundingClientRect();
+                handleMove(e);
             });
-            window.addEventListener('touchmove', handleMove);
-            
-            // Mouse support for testing
-            container.addEventListener('mousedown', () => isMoving = true);
+            window.addEventListener('mousemove', handleMove);
             window.addEventListener('mouseup', () => {
                 isMoving = false;
                 knob.style.transform = `translate(0px, 0px)`;
                 joyPos = { x: 0, y: 0 };
             });
-            window.addEventListener('mousemove', handleMove);
         }
 
         function init3D() {
@@ -143,7 +163,6 @@
             function animate() {
                 requestAnimationFrame(animate);
 
-                // Movement from Joystick
                 if (Math.abs(joyPos.y) > 0.1) player.translateZ(joyPos.y * 0.5);
                 if (Math.abs(joyPos.x) > 0.1) player.rotation.y -= joyPos.x * 0.05;
 
@@ -161,6 +180,12 @@
                 renderer.render(scene, camera);
             }
             animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
         }
     </script>
 </body>
