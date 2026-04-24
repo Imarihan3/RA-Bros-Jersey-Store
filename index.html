@@ -16,6 +16,12 @@
             font-weight: bold; pointer-events: none; transform: translate(-50%, -100%);
             z-index: 50;
         }
+        /* New Loading Screen Feedback */
+        #loading-screen {
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.8); color: #0f0; font-size: 40px; font-weight: bold;
+            display: none; justify-content: center; align-items: center; z-index: 999;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
@@ -26,6 +32,8 @@
         <p>Move: <b>W, A, S, D</b></p>
     </div>
 
+    <div id="loading-screen">ENTERING STORE...</div>
+
     <div id="l1" class="label">NORMAL JERSEYS</div>
     <div id="l2" class="label">LIMITED EDITION</div>
     <div id="l3" class="label">CUSTOMISABLE</div>
@@ -33,10 +41,7 @@
     <script>
         // 1. ENGINE SETUP
         var scene = new THREE.Scene();
-        // Updated Sky Color to Light Blue
         scene.background = new THREE.Color(0x87CEEB); 
-        
-        // Add a bit of fog to make the horizon look natural
         scene.fog = new THREE.Fog(0x87CEEB, 20, 100);
 
         var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -83,6 +88,9 @@
         player.position.y = 0.75;
         scene.add(player);
 
+        // Create a perfect 3D bounding box for the player
+        var playerBox = new THREE.Box3();
+
         // 6. JERSEY BLOCKS
         var blocks = [];
         function createBlock(x, z, color, url, labelID) {
@@ -91,7 +99,15 @@
                 new THREE.MeshBasicMaterial({ color: color })
             );
             b.position.set(x, 2, z);
-            b.userData = { url: url, label: document.getElementById(labelID) };
+            
+            // Assign a bounding box to this specific block for precise collision
+            b.geometry.computeBoundingBox();
+            
+            b.userData = { 
+                url: url, 
+                label: document.getElementById(labelID),
+                boundingBox: new THREE.Box3() // Empty box to update later
+            };
             scene.add(b);
             blocks.push(b);
         }
@@ -119,14 +135,23 @@
             camera.position.lerp(camPos, 0.1);
             camera.lookAt(player.position);
 
-            // Update Labels & Collision
+            // Update the player's bounding box to its current position every frame
+            playerBox.setFromObject(player);
+
+            // Update Labels & Perfect Collision
             blocks.forEach(function(b) {
                 var vector = b.position.clone().project(camera);
                 b.userData.label.style.left = (vector.x * .5 + .5) * window.innerWidth + 'px';
                 b.userData.label.style.top = (vector.y * -.5 + .5) * window.innerHeight - 40 + 'px';
 
-                if(!isDone && player.position.distanceTo(b.position) < 3.5) {
+                // Update the block's bounding box
+                b.userData.boundingBox.setFromObject(b);
+
+                // Check for TRUE physical intersection
+                if(!isDone && playerBox.intersectsBox(b.userData.boundingBox)) {
                     isDone = true;
+                    // Show visual feedback so user knows it worked
+                    document.getElementById('loading-screen').style.display = 'flex';
                     window.location.href = b.userData.url;
                 }
             });
