@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Your Cart</title>
+<style>
+body { font-family:Arial; background:#111; color:white; text-align:center; }
+.item { margin:10px; padding:10px; background:#222; border-radius:8px; }
+button { padding:10px; margin-top:20px; }
+</style>
+</head>
+
+<body>
+
+<h1>🛒 Your Cart</h1>
+<div id="cart"></div>
+
+<button onclick="checkout()">Checkout</button>
+
+<script type="module">
+import { getCart, placeOrder } from "./firebase.js";
+
+async function loadCart() {
+  const items = await getCart();
+  const div = document.getElementById("cart");
+
+  items.forEach(i => {
+    div.innerHTML += `<div class="item">${i.item}</div>`;
+  });
+}
+
+window.checkout = async function() {
+  await placeOrder();
+};
+
+loadCart();
+</script>
+
+</body>
+</html>
