@@ -35,5 +35,13 @@ function addToCart(item){
  alert(item + " added 🛒");
 }
 </script>
+<script type="module">
+import { addItem } from "./firebase.js";
+
+window.addToCart = function(item) {
+  addItem(item);
+  alert(item + " added 🛒");
+}
+</script>
 </body>
 </html>
