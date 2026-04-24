@@ -39,10 +39,18 @@ function addToCart(item){
 <script type="module">
 import { addItem } from "./firebase.js";
 
-window.addToCart = function(item) {
-  addItem(item);
-  alert(item + " added 🛒");
-}
+window.addToCart = async function(item) {
+  console.log("Button clicked:", item);
+
+  try {
+    await addItem(item);
+    console.log("Saved to Firestore ✅");
+    alert("Saved ✅");
+  } catch (e) {
+    console.error("ERROR:", e);
+    alert("Error ❌");
+  }
+};
 </script>
 </body>
 </html>
