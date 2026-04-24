@@ -68,7 +68,8 @@ input {
 <h1>🎨 Custom Jersey Builder</h1>
 <p>Create your own drip</p>
 
-<button onclick="location.href='cart.html'" style="margin-top:10px;padding:10px;border:none;border-radius:8px;background:#ff9800;color:white;cursor:pointer;">
+<button onclick="location.href='cart.html'" 
+style="margin-top:10px;padding:10px;border:none;border-radius:8px;background:#ff9800;color:white;cursor:pointer;">
 🛒 View Cart
 </button>
 </header>
@@ -89,16 +90,17 @@ input {
 <button class="btn" onclick="setOption('style','Street')">Street</button>
 
 <p>Number:</p>
-<input type="number" id="number" oninput="updatePreview()">
+<input type="number" id="number" placeholder="Enter number" oninput="updatePreview()">
 
 <p>Name:</p>
-<input type="text" id="name" oninput="updatePreview()">
+<input type="text" id="name" placeholder="Enter name" oninput="updatePreview()">
 
 <button class="btn btn-primary" onclick="addToCart()">Add Custom Jersey 🛒</button>
 
 </div>
 </div>
 
+<!-- FIREBASE -->
 <script type="module">
 import { addItem } from "./firebase.js";
 
@@ -109,11 +111,13 @@ let jersey = {
   name: ''
 };
 
+// SET OPTIONS
 window.setOption = function(type, value) {
   jersey[type] = value;
   updatePreview();
 };
 
+// UPDATE PREVIEW
 window.updatePreview = function() {
   jersey.number = document.getElementById('number').value;
   jersey.name = document.getElementById('name').value;
@@ -122,24 +126,31 @@ window.updatePreview = function() {
     `${jersey.color || "?"} ${jersey.style || "?"}\n${jersey.name || "NAME"} #${jersey.number || "00"}`;
 };
 
+// ADD TO FIREBASE
 window.addToCart = async function() {
   try {
-    // 🛑 Prevent empty save
+    // Always refresh values
+    jersey.number = document.getElementById('number').value;
+    jersey.name = document.getElementById('name').value;
+
+    // Prevent empty data
     if (!jersey.color || !jersey.style || !jersey.number || !jersey.name) {
-      alert("Fill all fields first bro 😭");
+      alert("Fill everything first bro 😭");
       return;
     }
 
     const itemString =
       `${jersey.color} ${jersey.style} | ${jersey.name} #${jersey.number}`;
 
+    console.log("Saving:", itemString);
+
     await addItem(itemString);
 
     alert("Saved to cart 🛒🔥");
 
   } catch (e) {
-    console.error(e);
-    alert("Firebase error ❌ (check console)");
+    console.error("ERROR:", e);
+    alert("Firebase error ❌");
   }
 };
 </script>
