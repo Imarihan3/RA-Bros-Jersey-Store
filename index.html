@@ -16,7 +16,7 @@
             font-weight: bold; pointer-events: none; transform: translate(-50%, -100%);
             z-index: 50;
         }
-        /* New Loading Screen Feedback */
+        /* Loading Screen Feedback */
         #loading-screen {
             position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.8); color: #0f0; font-size: 40px; font-weight: bold;
@@ -88,9 +88,6 @@
         player.position.y = 0.75;
         scene.add(player);
 
-        // Create a perfect 3D bounding box for the player
-        var playerBox = new THREE.Box3();
-
         // 6. JERSEY BLOCKS
         var blocks = [];
         function createBlock(x, z, color, url, labelID) {
@@ -99,15 +96,7 @@
                 new THREE.MeshBasicMaterial({ color: color })
             );
             b.position.set(x, 2, z);
-            
-            // Assign a bounding box to this specific block for precise collision
-            b.geometry.computeBoundingBox();
-            
-            b.userData = { 
-                url: url, 
-                label: document.getElementById(labelID),
-                boundingBox: new THREE.Box3() // Empty box to update later
-            };
+            b.userData = { url: url, label: document.getElementById(labelID) };
             scene.add(b);
             blocks.push(b);
         }
@@ -135,36 +124,13 @@
             camera.position.lerp(camPos, 0.1);
             camera.lookAt(player.position);
 
-            // Update the player's bounding box to its current position every frame
-            playerBox.setFromObject(player);
-
-            // Update Labels & Perfect Collision
+            // Update Labels & Pure Math Collision
             blocks.forEach(function(b) {
                 var vector = b.position.clone().project(camera);
                 b.userData.label.style.left = (vector.x * .5 + .5) * window.innerWidth + 'px';
                 b.userData.label.style.top = (vector.y * -.5 + .5) * window.innerHeight - 40 + 'px';
 
-                // Update the block's bounding box
-                b.userData.boundingBox.setFromObject(b);
-
-                // Check for TRUE physical intersection
-                if(!isDone && playerBox.intersectsBox(b.userData.boundingBox)) {
-                    isDone = true;
-                    // Show visual feedback so user knows it worked
-                    document.getElementById('loading-screen').style.display = 'flex';
-                    window.location.href = b.userData.url;
-                }
-            });
-
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        window.onresize = function() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        };
-    </script>
-</body>
-</html>
+                // THE ULTIMATE FIX: Raw Math calculation. No 3D engine physics required.
+                // We calculate exactly how far the player is from the center of the block on the floor.
+                var distanceX = Math.abs(player.position.x - b.position.x);
+                var distanceZ = Math.abs(player.position.z - b.position.z);
