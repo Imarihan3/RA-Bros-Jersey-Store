@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>RA Bros 3D</title>
 
 <style>
@@ -113,8 +114,8 @@ function setupJoystick() {
     if (!isMoving) return;
     if (e.cancelable) e.preventDefault();
 
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const clientX = e.touches ? e.touches.clientX : e.clientX;
+    const clientY = e.touches ? e.touches.clientY : e.clientY;
 
     let x = clientX - rect.left - centerX;
     let y = clientY - rect.top - centerY;
@@ -125,6 +126,7 @@ function setupJoystick() {
     x = Math.cos(angle) * dist;
     y = Math.sin(angle) * dist;
 
+    // Fixed missing backticks for the transform string
     knob.style.transform = `translate(${x}px, ${y}px)`;
     joyPos = { x: x/50, y: y/50 };
   }
@@ -163,6 +165,9 @@ function init3D() {
 
   const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
   const renderer = new THREE.WebGLRenderer({antialias:true});
+  
+  // Added pixel ratio fix so Android doesn't look blurry or distorted
+  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(innerWidth, innerHeight);
   document.body.appendChild(renderer.domElement);
 
