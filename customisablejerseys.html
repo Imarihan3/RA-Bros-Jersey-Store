@@ -10,9 +10,7 @@ header { text-align:center; padding:20px; background:#000; }
 
 .container {
   display:flex;
-  flex-wrap:wrap;
   justify-content:center;
-  gap:30px;
   padding:40px;
 }
 
@@ -33,10 +31,8 @@ header { text-align:center; padding:20px; background:#000; }
   justify-content:center;
   margin-bottom:15px;
   text-align:center;
+  white-space:pre-line;
 }
-
-.option-group { margin-bottom:15px; }
-.option-group p { margin:5px 0; }
 
 .btn {
   padding:8px 12px;
@@ -71,53 +67,38 @@ input {
 <header>
 <h1>🎨 Custom Jersey Builder</h1>
 <p>Create your own drip</p>
+
 <button onclick="location.href='cart.html'" style="margin-top:10px;padding:10px;border:none;border-radius:8px;background:#ff9800;color:white;cursor:pointer;">
 🛒 View Cart
 </button>
 </header>
 
 <div class="container">
-
 <div class="builder">
 
-<div class="preview" id="preview">
-Your Jersey
-</div>
+<div class="preview" id="preview">Your Jersey</div>
 
-<!-- COLOR -->
-<div class="option-group">
 <p>Color:</p>
 <button class="btn" onclick="setOption('color','Black')">Black</button>
 <button class="btn" onclick="setOption('color','Red')">Red</button>
 <button class="btn" onclick="setOption('color','Blue')">Blue</button>
-</div>
 
-<!-- STYLE -->
-<div class="option-group">
 <p>Style:</p>
 <button class="btn" onclick="setOption('style','Home')">Home</button>
 <button class="btn" onclick="setOption('style','Away')">Away</button>
 <button class="btn" onclick="setOption('style','Street')">Street</button>
-</div>
 
-<!-- NUMBER -->
-<div class="option-group">
 <p>Number:</p>
-<input type="number" id="number" placeholder="Enter number" oninput="updatePreview()">
-</div>
+<input type="number" id="number" oninput="updatePreview()">
 
-<!-- NAME -->
-<div class="option-group">
 <p>Name:</p>
-<input type="text" id="name" placeholder="Enter name" oninput="updatePreview()">
-</div>
+<input type="text" id="name" oninput="updatePreview()">
 
 <button class="btn btn-primary" onclick="addToCart()">Add Custom Jersey 🛒</button>
 
 </div>
 </div>
 
-<!-- FIREBASE + LOGIC -->
 <script type="module">
 import { addItem } from "./firebase.js";
 
@@ -138,22 +119,27 @@ window.updatePreview = function() {
   jersey.name = document.getElementById('name').value;
 
   document.getElementById('preview').innerText =
-    `${jersey.color} ${jersey.style}\n${jersey.name} #${jersey.number}`;
+    `${jersey.color || "?"} ${jersey.style || "?"}\n${jersey.name || "NAME"} #${jersey.number || "00"}`;
 };
 
 window.addToCart = async function() {
   try {
+    // 🛑 Prevent empty save
+    if (!jersey.color || !jersey.style || !jersey.number || !jersey.name) {
+      alert("Fill all fields first bro 😭");
+      return;
+    }
+
     const itemString =
       `${jersey.color} ${jersey.style} | ${jersey.name} #${jersey.number}`;
 
     await addItem(itemString);
 
-    console.log("Saved:", itemString);
-    alert("Custom jersey saved 🛒🔥");
+    alert("Saved to cart 🛒🔥");
 
   } catch (e) {
     console.error(e);
-    alert("Error ❌");
+    alert("Firebase error ❌ (check console)");
   }
 };
 </script>
