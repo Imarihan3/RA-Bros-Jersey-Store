@@ -1,241 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RA Bros 3D - Android Fixed</title>
+<meta charset="UTF-8">
+<title>Custom Jersey Builder</title>
 
-    <style>
-        body { margin:0; overflow:hidden; background:#87CEEB; font-family:sans-serif; touch-action:none; }
+<style>
+body { margin:0; font-family:Arial; background:#0f0f0f; color:white; }
+header { text-align:center; padding:20px; background:#000; }
 
-        #overlay {
-            position:absolute; top:0; left:0; width:100%; height:100%;
-            background:rgba(0,0,0,0.8); color:white;
-            display:flex; flex-direction:column;
-            align-items:center; justify-content:center;
-            z-index:2000; cursor:pointer;
-        }
+.container {
+  display:flex;
+  justify-content:center;
+  padding:40px;
+}
 
-        #ui {
-            position:absolute; top:10px; left:10px;
-            color:#fff; background:rgba(0,40,0,0.8);
-            padding:15px; border-radius:10px; z-index:100;
-        }
+.builder {
+  background:#1a1a1a;
+  padding:20px;
+  border-radius:12px;
+  width:300px;
+  box-shadow:0 0 15px rgba(255,0,80,0.3);
+}
 
-        #enterBtn {
-            position:absolute; bottom:30px; left:50%;
-            transform:translateX(-50%); padding:12px 20px;
-            background:#ff0033; color:white; border:none;
-            border-radius:10px; font-weight:bold; display:none; z-index:2000;
-        }
+.preview {
+  height:250px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#1f1f1f,#2a2a2a);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:15px;
+  text-align:center;
+  white-space:pre-line;
+}
 
-        #joystick-container {
-            position:absolute; bottom:50px; left:50px;
-            width:120px; height:120px;
-            background:rgba(255,255,255,0.2);
-            border-radius:50%; z-index:1500;
-            display:none; touch-action: none; /* Prevents scroll interference */
-        }
+.btn {
+  padding:8px 12px;
+  margin:3px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  background:#333;
+  color:white;
+}
 
-        #joystick-knob {
-            position:absolute; top:30px; left:30px;
-            width:60px; height:60px;
-            background:rgba(255,255,255,0.5);
-            border-radius:50%; pointer-events: none;
-        }
+.btn:hover { background:#ff0033; }
 
-        .label {
-            position:absolute; color:white; background:rgba(0,0,0,0.8);
-            padding:5px 10px; border-radius:5px; border:1px solid white;
-            font-weight:bold; transform:translate(-50%,-100%);
-        }
-    </style>
+.btn-primary {
+  width:100%;
+  margin-top:10px;
+  background:#ff0033;
+}
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+input {
+  width:100%;
+  padding:8px;
+  border-radius:6px;
+  border:none;
+  margin-top:5px;
+}
+</style>
 </head>
 
 <body>
 
-<div id="overlay" onclick="startApp()">
-    <h1>RA BROS 3D STADIUM</h1>
-    <p>Move with joystick • Go near shop • Press ENTER</p>
+<header>
+<h1>🎨 Custom Jersey Builder</h1>
+<p>Create your own drip</p>
+
+<button onclick="location.href='cart.html'" 
+style="margin-top:10px;padding:10px;border:none;border-radius:8px;background:#ff9800;color:white;cursor:pointer;">
+🛒 View Cart
+</button>
+</header>
+
+<div class="container">
+<div class="builder">
+
+<div class="preview" id="preview">Your Jersey</div>
+
+<p>Color:</p>
+<button class="btn" onclick="setOption('color','Black')">Black</button>
+<button class="btn" onclick="setOption('color','Red')">Red</button>
+<button class="btn" onclick="setOption('color','Blue')">Blue</button>
+
+<p>Style:</p>
+<button class="btn" onclick="setOption('style','Home')">Home</button>
+<button class="btn" onclick="setOption('style','Away')">Away</button>
+<button class="btn" onclick="setOption('style','Street')">Street</button>
+
+<p>Number:</p>
+<input type="number" id="number" placeholder="Enter number" oninput="updatePreview()">
+
+<p>Name:</p>
+<input type="text" id="name" placeholder="Enter name" oninput="updatePreview()">
+
+<button class="btn btn-primary" onclick="addToCart()">Add Custom Jersey 🛒</button>
+
+</div>
 </div>
 
-<div id="ui">🏟️ Explore Stores</div>
+<!-- FIREBASE -->
+<script type="module">
+import { addItem } from "./firebase.js";
 
-<button id="enterBtn">ENTER STORE</button>
+let jersey = {
+  color: '',
+  style: '',
+  number: '',
+  name: ''
+};
 
-<div id="joystick-container">
-    <div id="joystick-knob"></div>
-</div>
+// SET OPTIONS
+window.setOption = function(type, value) {
+  jersey[type] = value;
+  updatePreview();
+};
 
-<div id="l1" class="label">NORMAL JERSEYS</div>
-<div id="l2" class="label">LIMITED JERSEYS</div>
-<div id="l3" class="label">CUSTOM JERSEYS</div>
+// UPDATE PREVIEW
+window.updatePreview = function() {
+  jersey.number = document.getElementById('number').value;
+  jersey.name = document.getElementById('name').value;
 
-<script>
-window.onload = function() {
+  document.getElementById('preview').innerText =
+    `${jersey.color || "?"} ${jersey.style || "?"}\n${jersey.name || "NAME"} #${jersey.number || "00"}`;
+};
 
-    let joyPos = { x: 0, y: 0 };
-    let isMoving = false;
-    let currentStore = null;
+// ADD TO FIREBASE
+window.addToCart = async function() {
+  try {
+    // Always refresh values
+    jersey.number = document.getElementById('number').value;
+    jersey.name = document.getElementById('name').value;
 
-    window.startApp = function() {
-        document.getElementById('overlay').style.display = 'none';
-        document.getElementById('joystick-container').style.display = 'block';
-        init3D();
-        setupJoystick();
-    };
-
-    function setupJoystick() {
-        const container = document.getElementById('joystick-container');
-        const knob = document.getElementById('joystick-knob');
-        let rect;
-        const centerX = 60;
-        const centerY = 60;
-
-        function move(e) {
-            if (!isMoving) return;
-            // CRITICAL: Block Android scroll gestures
-            if (e.cancelable) e.preventDefault();
-
-            const touch = e.touches ? e.touches : e;
-            const clientX = touch.clientX;
-            const clientY = touch.clientY;
-
-            let x = clientX - rect.left - centerX;
-            let y = clientY - rect.top - centerY;
-
-            const dist = Math.min(Math.sqrt(x*x + y*y), 50);
-            const angle = Math.atan2(y, x);
-
-            x = Math.cos(angle) * dist;
-            y = Math.sin(angle) * dist;
-
-            knob.style.transform = `translate(${x}px, ${y}px)`;
-            joyPos = { x: x/50, y: y/50 };
-        }
-
-        // Use passive: false to ensure preventDefault works on Android
-        container.addEventListener('touchstart', e => {
-            isMoving = true;
-            rect = container.getBoundingClientRect();
-            move(e);
-        }, { passive: false });
-
-        window.addEventListener('touchmove', move, { passive: false });
-
-        window.addEventListener('touchend', () => {
-            isMoving = false;
-            knob.style.transform = 'translate(0px,0px)';
-            joyPos = { x: 0, y: 0 };
-        }, { passive: false });
-
-        // PC Support
-        container.addEventListener('mousedown', e => {
-            isMoving = true;
-            rect = container.getBoundingClientRect();
-            move(e);
-        });
-        window.addEventListener('mousemove', move);
-        window.addEventListener('mouseup', () => {
-            isMoving = false;
-            knob.style.transform = 'translate(0px,0px)';
-            joyPos = { x: 0, y: 0 };
-        });
+    // Prevent empty data
+    if (!jersey.color || !jersey.style || !jersey.number || !jersey.name) {
+      alert("Fill everything first bro 😭");
+      return;
     }
 
-    function init3D() {
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x87CEEB);
+    const itemString =
+      `${jersey.color} ${jersey.style} | ${jersey.name} #${jersey.number}`;
 
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        
-        // Corrects distortion/blur on Android
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+    console.log("Saving:", itemString);
 
-        scene.add(new THREE.AmbientLight(0xffffff, 1));
-        const light = new THREE.DirectionalLight(0xffffff, 0.8);
-        light.position.set(10,20,10);
-        scene.add(light);
+    await addItem(itemString);
 
-        const loader = new THREE.TextureLoader();
-        const grass = loader.load("https://threejs.org/examples/textures/terrain/grasslight-big.jpg");
-        grass.wrapS = grass.wrapT = THREE.RepeatWrapping;
-        grass.repeat.set(20,20);
+    alert("Saved to cart 🛒🔥");
 
-        const floor = new THREE.Mesh(
-            new THREE.PlaneGeometry(100,100),
-            new THREE.MeshStandardMaterial({ map: grass })
-        );
-        floor.rotation.x = -Math.PI/2;
-        scene.add(floor);
-
-        const player = new THREE.Mesh(
-            new THREE.BoxGeometry(2,2,2),
-            new THREE.MeshStandardMaterial({ color: 0xffffff })
-        );
-        player.position.y = 1;
-        scene.add(player);
-
-        const stores = [];
-        function addStore(x, z, color, url, labelId) {
-            const b = new THREE.Mesh(new THREE.BoxGeometry(5,5,5), new THREE.MeshStandardMaterial({ color }));
-            b.position.set(x, 2.5, z);
-            b.userData = { url, label: document.getElementById(labelId) };
-            scene.add(b);
-            stores.push(b);
-        }
-
-        addStore(-20, -20, 0xff0000, "normaljerseys.html", "l1");
-        addStore(0, -35, 0x00ff00, "lejerseys.html", "l2");
-        addStore(20, -20, 0x0000ff, "customisablejerseys.html", "l3");
-
-        const enterBtn = document.getElementById("enterBtn");
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-            if (Math.abs(joyPos.y) > 0.1) player.translateZ(joyPos.y * 0.5);
-            if (Math.abs(joyPos.x) > 0.1) player.rotation.y -= joyPos.x * 0.05;
-
-            const camPos = new THREE.Vector3(0,8,15).applyQuaternion(player.quaternion).add(player.position);
-            camera.position.lerp(camPos, 0.1);
-            camera.lookAt(player.position);
-
-            currentStore = null;
-            stores.forEach(b => {
-                const dist = player.position.distanceTo(b.position);
-                const v = b.position.clone().project(camera);
-                b.userData.label.style.left = (v.x * 0.5 + 0.5) * window.innerWidth + 'px';
-                b.userData.label.style.top = (v.y * -0.5 + 0.5) * window.innerHeight - 40 + 'px';
-                if (dist < 6) currentStore = b;
-            });
-
-            enterBtn.style.display = currentStore ? "block" : "none";
-            renderer.render(scene, camera);
-        }
-
-        animate();
-
-        enterBtn.onclick = () => {
-            if (currentStore) window.location.href = currentStore.userData.url;
-        };
-
-        window.onkeydown = e => {
-            if (e.key === "Enter" && currentStore) window.location.href = currentStore.userData.url;
-        };
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    }
+  } catch (e) {
+    console.error("ERROR:", e);
+    alert("Firebase error ❌");
+  }
 };
 </script>
+
 </body>
 </html>
