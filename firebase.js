@@ -1,4 +1,3 @@
-./ firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -16,7 +15,6 @@ const provider = new GoogleAuthProvider();
 
 let currentUser = null;
 
-// LOGIN
 export async function login() {
   if (!currentUser) {
     const result = await signInWithPopup(auth, provider);
@@ -25,7 +23,6 @@ export async function login() {
   return currentUser;
 }
 
-// ADD TO CART
 export async function addItem(item) {
   const user = await login();
   await addDoc(collection(db, "cart"), {
@@ -35,7 +32,6 @@ export async function addItem(item) {
   });
 }
 
-// GET CART
 export async function getCart() {
   const user = await login();
   const q = query(collection(db, "cart"), where("email", "==", user.email));
@@ -45,7 +41,6 @@ export async function getCart() {
   return items;
 }
 
-// PLACE ORDER
 export async function placeOrder() {
   const user = await login();
   const items = await getCart();
