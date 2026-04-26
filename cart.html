@@ -8,8 +8,8 @@ body { font-family:Arial; background:#111; color:white; text-align:center; }
 
 .item {
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
   background:#222;
   margin:10px;
   padding:10px;
@@ -69,10 +69,10 @@ function removeItem(index){
 render();
 </script>
 
-<!-- 🔥 FIREBASE CHECKOUT ONLY -->
+<!-- FIREBASE ONLY HERE -->
 <script type="module">
-import { addDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { db, login } from "./firebase.js";
+import { addDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 window.checkout = async function(){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -82,21 +82,27 @@ window.checkout = async function(){
     return;
   }
 
-  const user = await login();
+  try {
+    const user = await login();
 
-  for(let item of cart){
-    await addDoc(collection(db,"orders"),{
-      email:user.email,
-      name:item.name,
-      image:item.image,
-      time:new Date()
-    });
+    for(let item of cart){
+      await addDoc(collection(db,"orders"),{
+        email:user.email,
+        name:item.name,
+        image:item.image,
+        time:new Date()
+      });
+    }
+
+    alert("Order placed 🚀");
+
+    localStorage.removeItem("cart");
+    location.reload();
+
+  } catch(e){
+    console.error(e);
+    alert("Firebase error ❌");
   }
-
-  alert("Order placed 🚀");
-
-  localStorage.removeItem("cart");
-  location.reload();
 };
 </script>
 
