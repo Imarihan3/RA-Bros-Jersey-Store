@@ -18,6 +18,17 @@ header {
   background:#000;
 }
 
+.cart-btn {
+  margin-top:10px;
+  padding:10px 15px;
+  border:none;
+  border-radius:8px;
+  background:#ff9800;
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+
 .grid {
   display:flex;
   gap:20px;
@@ -80,6 +91,7 @@ img {
 
 <header>
 <h1>🔥 Limited Drops</h1>
+<button class="cart-btn" onclick="location.href='cart.html'">🛒 View Cart</button>
 </header>
 
 <div class="grid">
@@ -88,52 +100,49 @@ img {
 <span class="badge">LIMITED</span>
 <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey1.jpeg">
 <p>Phantom Blue Aura</p>
-<button class="btn" onclick="addToCart('Phantom Blue Aura')">Add</button>
+<button class="btn" onclick="addToCart('Phantom Blue Aura','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey1.jpeg')">Add</button>
 </div>
 
 <div class="card">
 <span class="badge">RARE</span>
 <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey2.jpeg">
 <p>Dragon Black Elite</p>
-<button class="btn" onclick="addToCart('Dragon Black Elite')">Add</button>
+<button class="btn" onclick="addToCart('Dragon Black Elite','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey2.jpeg')">Add</button>
 </div>
 
 <div class="card">
 <span class="badge">DROP</span>
 <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey3.jpeg">
 <p>Pink Velocity</p>
-<button class="btn" onclick="addToCart('Pink Velocity')">Add</button>
+<button class="btn" onclick="addToCart('Pink Velocity','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey3.jpeg')">Add</button>
 </div>
 
 <div class="card">
 <span class="badge">LIMITED</span>
 <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey4.jpeg">
 <p>Samurai White</p>
-<button class="btn" onclick="addToCart('Samurai White')">Add</button>
+<button class="btn" onclick="addToCart('Samurai White','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey4.jpeg')">Add</button>
 </div>
 
 <div class="card">
 <span class="badge">RARE</span>
 <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey5.jpeg">
 <p>Phoenix Storm</p>
-<button class="btn" onclick="addToCart('Phoenix Storm')">Add</button>
+<button class="btn" onclick="addToCart('Phoenix Storm','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey5.jpeg')">Add</button>
 </div>
 
 </div>
 
-<script type="module">
-import { addItem } from "./firebase.js";
+<!-- ✅ LOCAL CART SYSTEM -->
+<script>
+window.addToCart = function(name, image) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-window.addToCart = async function(item) {
-  console.log("Clicked:", item);
+  cart.push({ name, image });
 
-  try {
-    await addItem(item);
-    alert(item + " added 🛒🔥");
-  } catch (e) {
-    console.error(e);
-    alert("Error saving ❌");
-  }
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  alert(name + " added 🛒🔥");
 };
 </script>
 
