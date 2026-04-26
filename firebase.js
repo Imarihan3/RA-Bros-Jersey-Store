@@ -1,23 +1,17 @@
-// 🔥 Firebase core
+// Firebase core
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
-// 🔐 Auth
+// Auth
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// ☁️ Firestore
+// Firestore
 import { 
-  getFirestore, 
-  collection, 
-  addDoc, 
-  getDocs, 
-  query, 
-  where, 
-  deleteDoc, 
-  doc 
+  getFirestore, collection, addDoc, getDocs,
+  query, where, deleteDoc, doc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
+  apiKey: "AIzaSyD6Kn1k949hm8D8KG-0ClVLuBkacJB6c08",
   authDomain: "ra-bros.firebaseapp.com",
   projectId: "ra-bros",
 };
@@ -29,7 +23,6 @@ const provider = new GoogleAuthProvider();
 
 let currentUser = null;
 
-// 🔐 LOGIN
 export async function login() {
   if (!currentUser) {
     const result = await signInWithPopup(auth, provider);
@@ -38,7 +31,7 @@ export async function login() {
   return currentUser;
 }
 
-// ➕ ADD TO CART (FIREBASE)
+// ADD
 export async function addToCart(item) {
   const user = await login();
 
@@ -50,27 +43,27 @@ export async function addToCart(item) {
   });
 }
 
-// 📥 GET CART
+// GET
 export async function getCart() {
   const user = await login();
 
   const q = query(collection(db, "cart"), where("email", "==", user.email));
-  const snapshot = await getDocs(q);
+  const snap = await getDocs(q);
 
   let items = [];
-  snapshot.forEach(docSnap => {
+  snap.forEach(docSnap => {
     items.push({ id: docSnap.id, ...docSnap.data() });
   });
 
   return items;
 }
 
-// ❌ REMOVE ITEM
+// REMOVE
 export async function removeFromCart(id) {
   await deleteDoc(doc(db, "cart", id));
 }
 
-// 💳 CHECKOUT
+// CHECKOUT
 export async function checkoutCart() {
   const user = await login();
   const items = await getCart();
