@@ -2,68 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Legend Jerseys</title>
+<title>Normal Jerseys</title>
 
 <style>
 body { margin:0; font-family:Arial; background:#f5f5f5; }
-
-header {
-  text-align:center;
-  padding:20px;
-  background:#111;
-  color:white;
-}
+header { text-align:center; padding:20px; background:#111; color:white; }
 
 .cart-btn {
-  margin-top:10px;
-  padding:10px 15px;
-  border:none;
-  border-radius:8px;
-  background:#ff9800;
-  color:white;
-  cursor:pointer;
-  font-weight:bold;
+  margin-top:10px; padding:10px 15px;
+  border:none; border-radius:8px;
+  background:#ff9800; color:white; cursor:pointer;
 }
 
 .grid {
-  display:flex;
-  gap:20px;
-  flex-wrap:wrap;
-  justify-content:center;
-  padding:40px;
+  display:flex; gap:20px; flex-wrap:wrap;
+  justify-content:center; padding:40px;
 }
 
 .card {
-  background:white;
-  padding:15px;
-  border-radius:10px;
-  width:250px;
+  background:white; padding:15px;
+  border-radius:10px; width:250px;
   text-align:center;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 
 .card img {
-  width:100%;
-  height:250px;
-  object-fit:cover;
-  border-radius:10px;
+  width:100%; height:250px;
+  object-fit:cover; border-radius:10px;
 }
 
 .btn {
-  margin-top:10px;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  background:linear-gradient(45deg,#111,#444);
-  color:white;
+  margin-top:10px; padding:12px;
+  border:none; border-radius:10px;
+  background:#111; color:white;
   cursor:pointer;
-  font-weight:bold;
-  transition:0.3s;
-}
-
-.btn:hover {
-  background:linear-gradient(45deg,#444,#000);
-  transform:scale(1.05);
 }
 </style>
 </head>
@@ -71,18 +42,18 @@ header {
 <body>
 
 <header>
-  <h1>⚽ Legend Jerseys</h1>
-  <button class="cart-btn" onclick="location.href='cart.html'">🛒 View Cart</button>
+<h1>🛍️ Everyday Jerseys</h1>
+<button class="cart-btn" onclick="location.href='cart.html'">🛒 View Cart</button>
 </header>
 
 <div class="grid" id="grid"></div>
 
-<script>
+<script type="module">
+import { addToCart } from "./firebase.js";
+
 const names = [
-"Pelé","Diego Maradona","Lionel Messi","Cristiano Ronaldo","Zinedine Zidane",
-"Johan Cruyff","Ronaldo Nazário","David Beckham","Thierry Henry","Paolo Maldini",
-"Andrés Iniesta","George Best","Franz Beckenbauer","Gerd Müller","Kaka",
-"Andrea Pirlo","Roberto Carlos","Ronaldinho","Lev Yashin","Trent Alexander-Arnold"
+"Classic Home","Away White","Blue Strike","Red Force","Urban Fit",
+"Street Pro","Elite Black","Royal Blue","Sunset Orange","Forest Green"
 ];
 
 const images = [
@@ -95,17 +66,7 @@ const images = [
 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXav2vwjnPh10jfmh1XoFafpvCUBKOhzaEFw&s",
 "https://m.media-amazon.com/images/I/61F0kQC81uL._SL1500_.jpg",
 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmZbpi7oozH3XrsKVyMrSr27do3Rd8UASnhg&s",
-"https://m.media-amazon.com/images/I/71nswOq+vcL._AC_UY1100_.jpg",
-"https://m.media-amazon.com/images/I/51w+fQjpzML._AC_SY1000_.jpg",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxc-uTzOZJA9FzaSTLIvjpxhNe9mQj2bfoqA&s",
-"https://campeonsports.com/cdn/shop/files/rn-image_picker_lib_temp_e91f1749-f65a-48d1-9c59-a05639414de4.jpg?v=1765488226",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRR3VMddTDYB4pniIPAWMmRPYhjVSlJi2rPsQ&s",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdFnI68y9rY4mj14aC3318gXykSzfDR6vZkw&s",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpXHdVwOW0JcQR_vuxkoD9BKmY7sgAvesjGg&s",
-"https://m.media-amazon.com/images/I/41Ii+81GA3L.jpg",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHB_0JhOpb5aU67b4IKOefRD9VjvPWtER7OQ&s",
-"https://m.media-amazon.com/images/I/51kO15IYIoL._AC_UF894,1000_QL80_.jpg",
-"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOnj_v8N2R3mA8297Ge_Bcqx0Nr8g-ldoAnw&s"
+"https://m.media-amazon.com/images/I/71nswOq+vcL._AC_UY1100_.jpg"
 ];
 
 const grid = document.getElementById("grid");
@@ -115,22 +76,14 @@ names.forEach((name, i) => {
     <div class="card">
       <img src="${images[i]}">
       <p>${name}</p>
-      <button class="btn" onclick="addToCart('${name}','${images[i]}')">
-        Add to Cart
-      </button>
+      <button class="btn" onclick="add('${name}','${images[i]}')">Add</button>
     </div>
   `;
 });
 
-// ✅ LOCAL CART SYSTEM
-window.addToCart = function(name, image) {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  cart.push({ name, image });
-
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  alert(name + " added 🛒🔥");
+window.add = async function(name, image){
+  await addToCart({ name, image });
+  alert("Added 🛒");
 };
 </script>
 
