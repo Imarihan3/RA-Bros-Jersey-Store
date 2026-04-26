@@ -1,55 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Custom Jersey Builder</title>
+<title>Custom Jersey</title>
 
 <style>
-body { margin:0; font-family:Arial; background:#0f0f0f; color:white; }
-header { text-align:center; padding:20px; background:#000; }
+body { margin:0; font-family:Arial; background:#0f0f0f; color:white; text-align:center; }
 
-.container { display:flex; justify-content:center; padding:40px; }
-
-.builder {
-  background:#1a1a1a;
-  padding:20px; border-radius:12px;
-  width:300px;
+.container {
+  padding:40px;
 }
 
-.preview {
-  height:200px;
-  background:#222;
-  display:flex; align-items:center; justify-content:center;
-  margin-bottom:10px;
-  text-align:center;
+input {
+  padding:10px;
+  margin:10px;
+  width:200px;
+}
+
+button {
+  padding:10px;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<header>
 <h1>🎨 Custom Jersey</h1>
-<button onclick="location.href='cart.html'">🛒 View Cart</button>
-</header>
+<button onclick="location.href='cart.html'">🛒 Cart</button>
 
 <div class="container">
-<div class="builder">
-
-<div class="preview" id="preview">Your Jersey</div>
-
-<input id="name" placeholder="Name"><br><br>
-<input id="number" placeholder="Number"><br><br>
+<input id="name" placeholder="Name"><br>
+<input id="number" placeholder="Number"><br>
 
 <button onclick="addCustom()">Add Custom 🛒</button>
-
-</div>
 </div>
 
-<script type="module">
-import { addToCart } from "./firebase.js";
-
-window.addCustom = async function(){
+<script>
+function addCustom(){
   const name = document.getElementById("name").value;
   const number = document.getElementById("number").value;
 
@@ -58,14 +45,17 @@ window.addCustom = async function(){
     return;
   }
 
-  const item = {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  cart.push({
     name: `Custom ${name} #${number}`,
     image: "https://dummyimage.com/300x300/000/fff&text=Custom+Jersey"
-  };
+  });
 
-  await addToCart(item);
+  localStorage.setItem("cart", JSON.stringify(cart));
+
   alert("Custom added 🎨🔥");
-};
+}
 </script>
 
 </body>
