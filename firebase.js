@@ -5,11 +5,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 // ☁️ Firestore
-import { 
-  getFirestore, 
-  collection, 
-  addDoc 
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, where } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // ⚙️ CONFIG
 const firebaseConfig = {
@@ -18,7 +15,7 @@ const firebaseConfig = {
   projectId: "ra-bros",
 };
 
-// 🚀 Init
+// 🚀 INIT
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -35,7 +32,7 @@ export async function login() {
   return currentUser;
 }
 
-// 🛒 ADD TO CART (THIS WAS MISSING ❗)
+// 🛒 ADD TO CART
 export async function addToCart(item) {
   const user = await login();
 
@@ -47,5 +44,32 @@ export async function addToCart(item) {
   });
 }
 
-// 🔥 EXPORT
+// 📦 GET CART
+export async function getCart() {
+  const user = await login();
+  const q = query(collection(db, "cart"), where("email", "==", user.email));
+  const snap = await getDocs(q);
+
+  let items = [];
+  snap.forEach(doc => items.push(doc.data()));
+  return items;
+}
+
+// 💳 CHECKOUT
+export async function checkoutCart() {
+  const user = await login();
+  const items = await getCart();
+
+  for (let item of items) {
+    await addDoc(collection(db, "orders"), {
+      email: user.email,
+      name: item.name,
+      image: item.image,
+      time: new Date()
+    });
+  }
+
+  alert("Order placed 🚀");
+}
+
 export { db };
