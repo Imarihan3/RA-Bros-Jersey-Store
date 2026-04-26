@@ -1,34 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <title>Limited Jerseys</title>
 
 <style>
-body { margin:0; font-family:Arial; background:#0f0f0f; color:white; }
-header { text-align:center; padding:20px; background:#000; }
+body { margin:0; font-family:Arial; background:#111; color:white; }
+header { text-align:center; padding:20px; }
 
 .grid {
-  display:flex; gap:20px;
-  flex-wrap:wrap; justify-content:center;
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
+  justify-content:center;
   padding:40px;
 }
 
 .card {
   background:#1a1a1a;
-  padding:15px; border-radius:12px;
-  width:260px; text-align:center;
+  padding:10px;
+  width:240px;
+  border-radius:10px;
+  text-align:center;
 }
 
 .card img {
-  width:100%; height:260px;
-  object-fit:cover; border-radius:10px;
+  width:100%;
+  height:240px;
+  object-fit:cover;
+  border-radius:10px;
 }
 
-.btn {
-  margin-top:10px; padding:10px;
-  border:none; border-radius:8px;
-  background:#ff0033; color:white;
+button {
+  margin-top:10px;
+  padding:10px;
   cursor:pointer;
 }
 </style>
@@ -37,8 +41,8 @@ header { text-align:center; padding:20px; background:#000; }
 <body>
 
 <header>
-<h1>🔥 Limited Drops</h1>
-<button onclick="location.href='cart.html'">🛒 View Cart</button>
+<h1>🔥 Limited Jerseys</h1>
+<button onclick="location.href='cart.html'">🛒 Cart</button>
 </header>
 
 <div class="grid">
@@ -46,42 +50,24 @@ header { text-align:center; padding:20px; background:#000; }
 <div class="card">
 <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey1.jpeg">
 <p>Phantom Blue Aura</p>
-<button class="btn" onclick="add('Phantom Blue Aura','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey1.jpeg')">Add</button>
+<button onclick="addToCart('Phantom Blue Aura','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey1.jpeg')">Add</button>
 </div>
 
 <div class="card">
 <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey2.jpeg">
 <p>Dragon Black Elite</p>
-<button class="btn" onclick="add('Dragon Black Elite','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey2.jpeg')">Add</button>
-</div>
-
-<div class="card">
-<img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey3.jpeg">
-<p>Pink Velocity</p>
-<button class="btn" onclick="add('Pink Velocity','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey3.jpeg')">Add</button>
-</div>
-
-<div class="card">
-<img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey4.jpeg">
-<p>Samurai White</p>
-<button class="btn" onclick="add('Samurai White','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey4.jpeg')">Add</button>
-</div>
-
-<div class="card">
-<img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey5.jpeg">
-<p>Phoenix Storm</p>
-<button class="btn" onclick="add('Phoenix Storm','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey5.jpeg')">Add</button>
+<button onclick="addToCart('Dragon Black Elite','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey2.jpeg')">Add</button>
 </div>
 
 </div>
 
-<script type="module">
-import { addToCart } from "./firebase.js";
-
-window.add = async function(name, image){
-  await addToCart({ name, image });
-  alert("Added 🔥");
-};
+<script>
+function addToCart(name, image){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart.push({ name, image });
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert(name + " added 🔥");
+}
 </script>
 
 </body>
