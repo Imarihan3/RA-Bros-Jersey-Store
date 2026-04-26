@@ -32,6 +32,7 @@ header { text-align:center; padding:20px; background:#000; }
   margin-bottom:15px;
   text-align:center;
   white-space:pre-line;
+  font-weight:bold;
 }
 
 .btn {
@@ -100,10 +101,7 @@ style="margin-top:10px;padding:10px;border:none;border-radius:8px;background:#ff
 </div>
 </div>
 
-<!-- FIREBASE -->
-<script type="module">
-import { addItem } from "./firebase.js";
-
+<script>
 let jersey = {
   color: '',
   style: '',
@@ -112,47 +110,43 @@ let jersey = {
 };
 
 // SET OPTIONS
-window.setOption = function(type, value) {
+function setOption(type, value) {
   jersey[type] = value;
   updatePreview();
-};
+}
 
 // UPDATE PREVIEW
-window.updatePreview = function() {
+function updatePreview() {
   jersey.number = document.getElementById('number').value;
   jersey.name = document.getElementById('name').value;
 
   document.getElementById('preview').innerText =
     `${jersey.color || "?"} ${jersey.style || "?"}\n${jersey.name || "NAME"} #${jersey.number || "00"}`;
-};
+}
 
-// ADD TO FIREBASE
-window.addToCart = async function() {
-  try {
-    // Always refresh values
-    jersey.number = document.getElementById('number').value;
-    jersey.name = document.getElementById('name').value;
+// ADD TO CART (LOCAL STORAGE)
+function addToCart() {
+  jersey.number = document.getElementById('number').value;
+  jersey.name = document.getElementById('name').value;
 
-    // Prevent empty data
-    if (!jersey.color || !jersey.style || !jersey.number || !jersey.name) {
-      alert("Fill everything first bro 😭");
-      return;
-    }
-
-    const itemString =
-      `${jersey.color} ${jersey.style} | ${jersey.name} #${jersey.number}`;
-
-    console.log("Saving:", itemString);
-
-    await addItem(itemString);
-
-    alert("Saved to cart 🛒🔥");
-
-  } catch (e) {
-    console.error("ERROR:", e);
-    alert("Firebase error ❌");
+  if (!jersey.color || !jersey.style || !jersey.number || !jersey.name) {
+    alert("Fill everything first bro 😭");
+    return;
   }
-};
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const item = {
+    name: `${jersey.color} ${jersey.style} | ${jersey.name} #${jersey.number}`,
+    image: "https://via.placeholder.com/150?text=Custom+Jersey"
+  };
+
+  cart.push(item);
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  alert("Added to cart 🛒🔥");
+}
 </script>
 
 </body>
