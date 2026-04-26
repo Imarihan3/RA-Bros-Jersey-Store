@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Normal Jerseys</title>
+<title>Legend Jerseys</title>
 
 <style>
 body { margin:0; font-family:Arial; background:#f5f5f5; }
@@ -42,13 +42,11 @@ header {
   box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 
-.placeholder {
+.card img {
+  width:100%;
   height:250px;
-  background:#ddd;
+  object-fit:cover;
   border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
 
 .btn {
@@ -73,39 +71,60 @@ header {
 <body>
 
 <header>
-  <h1>🛍️ Everyday Jerseys</h1>
+  <h1>⚽ Legend Jerseys</h1>
   <button class="cart-btn" onclick="location.href='cart.html'">🛒 View Cart</button>
 </header>
 
 <div class="grid" id="grid"></div>
 
-<!-- CREATE JERSEYS -->
 <script>
 const names = [
-"Classic Home","Away White","Blue Strike","Red Force","Urban Fit","Street Pro","Elite Black","Royal Blue","Sunset Orange","Forest Green",
-"Storm Grey","Ocean Wave","Night Mode","Retro Gold","Flash Pink","Carbon Core","Skyline","Ice Blue","Shadow Fit","Victory Kit"
+"Pelé","Diego Maradona","Lionel Messi","Cristiano Ronaldo","Zinedine Zidane",
+"Johan Cruyff","Ronaldo Nazário","David Beckham","Thierry Henry","Paolo Maldini",
+"Andrés Iniesta","George Best","Franz Beckenbauer","Gerd Müller","Kaka",
+"Andrea Pirlo","Roberto Carlos","Ronaldinho","Lev Yashin","Trent Alexander-Arnold"
+];
+
+const images = [
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs2cpsxkRZN1s-LTr-3gLBOhDUD79mpcRFLA&s",
+"https://m.media-amazon.com/images/I/71zewDlzHbL._AC_UY1100_.jpg",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6w4qaaNxvx5l01G958Jv-Y7N9gKAEKVbF6Q&s",
+"https://m.media-amazon.com/images/I/61Vq0NatbbL._AC_UY1100_.jpg",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmKyoLfibamHvyu-EmqrwWbArfdRNqSMg8Bw&s",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7vbGHf4cZnMksP6J4MqCc1yJHUBYlxL0ICA&s",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXav2vwjnPh10jfmh1XoFafpvCUBKOhzaEFw&s",
+"https://m.media-amazon.com/images/I/61F0kQC81uL._SL1500_.jpg",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmZbpi7oozH3XrsKVyMrSr27do3Rd8UASnhg&s",
+"https://m.media-amazon.com/images/I/71nswOq+vcL._AC_UY1100_.jpg",
+"https://m.media-amazon.com/images/I/51w+fQjpzML._AC_SY1000_.jpg",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxc-uTzOZJA9FzaSTLIvjpxhNe9mQj2bfoqA&s",
+"https://campeonsports.com/cdn/shop/files/rn-image_picker_lib_temp_e91f1749-f65a-48d1-9c59-a05639414de4.jpg?v=1765488226",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRR3VMddTDYB4pniIPAWMmRPYhjVSlJi2rPsQ&s",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdFnI68y9rY4mj14aC3318gXykSzfDR6vZkw&s",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpXHdVwOW0JcQR_vuxkoD9BKmY7sgAvesjGg&s",
+"https://m.media-amazon.com/images/I/41Ii+81GA3L.jpg",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHB_0JhOpb5aU67b4IKOefRD9VjvPWtER7OQ&s",
+"https://m.media-amazon.com/images/I/51kO15IYIoL._AC_UF894,1000_QL80_.jpg",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOnj_v8N2R3mA8297Ge_Bcqx0Nr8g-ldoAnw&s"
 ];
 
 const grid = document.getElementById("grid");
 
-names.forEach(n => {
+names.forEach((name, i) => {
   grid.innerHTML += `
     <div class="card">
-      <div class="placeholder">JERSEY</div>
-      <p>${n}</p>
-      <button class="btn" onclick="addToCart('${n}')">Add to Cart</button>
+      <img src="${images[i]}">
+      <p>${name}</p>
+      <button class="btn" onclick="addToCart('${name}')">Add to Cart</button>
     </div>
   `;
 });
 </script>
 
-<!-- FIREBASE CONNECTION -->
 <script type="module">
 import { addItem } from "./firebase.js";
 
 window.addToCart = async function(item) {
-  console.log("Clicked:", item);
-
   try {
     await addItem(item);
     alert(item + " added 🛒");
