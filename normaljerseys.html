@@ -115,23 +115,22 @@ names.forEach((name, i) => {
     <div class="card">
       <img src="${images[i]}">
       <p>${name}</p>
-      <button class="btn" onclick="addToCart('${name}')">Add to Cart</button>
+      <button class="btn" onclick="addToCart('${name}','${images[i]}')">
+        Add to Cart
+      </button>
     </div>
   `;
 });
-</script>
 
-<script type="module">
-import { addItem } from "./firebase.js";
+// ✅ LOCAL CART SYSTEM
+window.addToCart = function(name, image) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-window.addToCart = async function(item) {
-  try {
-    await addItem(item);
-    alert(item + " added 🛒");
-  } catch (e) {
-    console.error(e);
-    alert("Error saving ❌");
-  }
+  cart.push({ name, image });
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  alert(name + " added 🛒🔥");
 };
 </script>
 
