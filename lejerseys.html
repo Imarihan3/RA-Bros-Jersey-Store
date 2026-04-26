@@ -1,39 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Limited Jerseys</title>
+<title>🔥 Limited Jerseys</title>
 
 <style>
-body { margin:0; font-family:Arial; background:#111; color:white; }
-header { text-align:center; padding:20px; }
+body { margin:0; font-family:Arial; background:#0f0f0f; color:white; }
+
+header {
+  text-align:center;
+  padding:20px;
+  background:#000;
+}
 
 .grid {
   display:flex;
-  flex-wrap:wrap;
   gap:20px;
+  flex-wrap:wrap;
   justify-content:center;
   padding:40px;
 }
 
 .card {
   background:#1a1a1a;
-  padding:10px;
-  width:240px;
-  border-radius:10px;
+  padding:15px;
+  border-radius:12px;
+  width:260px;
   text-align:center;
+  box-shadow:0 0 15px rgba(255,0,80,0.4);
 }
 
 .card img {
   width:100%;
-  height:240px;
+  height:250px;
   object-fit:cover;
   border-radius:10px;
 }
 
-button {
+.badge {
+  background:#ff0033;
+  padding:5px 10px;
+  border-radius:6px;
+  font-size:12px;
+}
+
+.btn {
   margin-top:10px;
   padding:10px;
+  background:#ff0033;
+  border:none;
+  color:white;
   cursor:pointer;
+  width:100%;
 }
 </style>
 </head>
@@ -41,32 +58,55 @@ button {
 <body>
 
 <header>
-<h1>🔥 Limited Jerseys</h1>
+<h1>🔥 Limited Drops</h1>
 <button onclick="location.href='cart.html'">🛒 Cart</button>
 </header>
 
 <div class="grid">
 
 <div class="card">
+<span class="badge">LIMITED</span>
 <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey1.jpeg">
 <p>Phantom Blue Aura</p>
-<button onclick="addToCart('Phantom Blue Aura','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey1.jpeg')">Add</button>
+<button class="btn" onclick="addToCart('Phantom Blue Aura','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey1.jpeg')">Add</button>
 </div>
 
 <div class="card">
+<span class="badge">RARE</span>
 <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey2.jpeg">
 <p>Dragon Black Elite</p>
-<button onclick="addToCart('Dragon Black Elite','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey2.jpeg')">Add</button>
+<button class="btn" onclick="addToCart('Dragon Black Elite','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey2.jpeg')">Add</button>
+</div>
+
+<div class="card">
+<span class="badge">DROP</span>
+<img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey3.jpeg">
+<p>Pink Velocity</p>
+<button class="btn" onclick="addToCart('Pink Velocity','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey3.jpeg')">Add</button>
+</div>
+
+<div class="card">
+<span class="badge">LIMITED</span>
+<img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey4.jpeg">
+<p>Samurai White</p>
+<button class="btn" onclick="addToCart('Samurai White','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey4.jpeg')">Add</button>
+</div>
+
+<div class="card">
+<span class="badge">RARE</span>
+<img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey5.jpeg">
+<p>Phoenix Storm</p>
+<button class="btn" onclick="addToCart('Phoenix Storm','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey5.jpeg')">Add</button>
 </div>
 
 </div>
 
 <script>
-function addToCart(name, image){
+function addToCart(name,image){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push({ name, image });
+  cart.push({name,image});
   localStorage.setItem("cart", JSON.stringify(cart));
-  alert(name + " added 🔥");
+  alert(name + " added 🛒🔥");
 }
 </script>
 
