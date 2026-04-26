@@ -1,21 +1,24 @@
-// Firebase core
+// 🔥 Firebase core
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
-// Auth
+// 🔐 Auth
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// Firestore
+// ☁️ Firestore
 import { 
-  getFirestore, collection, addDoc, getDocs,
-  query, where, deleteDoc, doc
+  getFirestore, 
+  collection, 
+  addDoc 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// ⚙️ CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyD6Kn1k949hm8D8KG-0ClVLuBkacJB6c08",
   authDomain: "ra-bros.firebaseapp.com",
   projectId: "ra-bros",
 };
 
+// 🚀 Init
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -23,6 +26,7 @@ const provider = new GoogleAuthProvider();
 
 let currentUser = null;
 
+// 🔐 LOGIN
 export async function login() {
   if (!currentUser) {
     const result = await signInWithPopup(auth, provider);
@@ -31,7 +35,7 @@ export async function login() {
   return currentUser;
 }
 
-// ADD
+// 🛒 ADD TO CART (THIS WAS MISSING ❗)
 export async function addToCart(item) {
   const user = await login();
 
@@ -43,43 +47,5 @@ export async function addToCart(item) {
   });
 }
 
-// GET
-export async function getCart() {
-  const user = await login();
-
-  const q = query(collection(db, "cart"), where("email", "==", user.email));
-  const snap = await getDocs(q);
-
-  let items = [];
-  snap.forEach(docSnap => {
-    items.push({ id: docSnap.id, ...docSnap.data() });
-  });
-
-  return items;
-}
-
-// REMOVE
-export async function removeFromCart(id) {
-  await deleteDoc(doc(db, "cart", id));
-}
-
-// CHECKOUT
-export async function checkoutCart() {
-  const user = await login();
-  const items = await getCart();
-
-  for (let item of items) {
-    await addDoc(collection(db, "orders"), {
-      email: user.email,
-      name: item.name,
-      image: item.image,
-      time: new Date()
-    });
-
-    await deleteDoc(doc(db, "cart", item.id));
-  }
-
-  alert("Order placed 🚀");
-}
-
+// 🔥 EXPORT
 export { db };
