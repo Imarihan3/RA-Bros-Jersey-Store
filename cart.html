@@ -1,50 +1,103 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Cart</title>
+<title>Your Cart</title>
 
 <style>
-body { background:#111; color:white; font-family:Arial; text-align:center; }
-.item { display:flex; justify-content:space-between; background:#222; margin:10px; padding:10px; }
-.item img { width:60px; height:60px; }
+body { font-family:Arial; background:#111; color:white; text-align:center; }
+
+.item {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#222;
+  margin:10px;
+  padding:10px;
+  border-radius:8px;
+}
+
+.item img {
+  width:60px;
+  height:60px;
+  border-radius:6px;
+}
+
+button {
+  padding:8px;
+  cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<h1>Your Cart</h1>
+<h1>🛒 Your Cart</h1>
+
 <div id="cart"></div>
 
-<button onclick="checkout()">Checkout 💳</button>
+<button onclick="checkout()">Proceed to Buy 💳</button>
 
-<script type="module">
-import { getCart, checkoutCart } from "./firebase.js";
-
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 const div = document.getElementById("cart");
 
-async function load(){
-  const items = await getCart();
+function render(){
+  div.innerHTML = "";
 
-  if(items.length === 0){
-    div.innerHTML = "Empty 😢";
+  if(cart.length === 0){
+    div.innerHTML = "Cart empty 😢";
     return;
   }
 
-  items.forEach(i=>{
+  cart.forEach((item,index)=>{
     div.innerHTML += `
       <div class="item">
-        <img src="${i.image}">
-        <p>${i.name}</p>
+        <img src="${item.image}">
+        <p>${item.name}</p>
+        <button onclick="removeItem(${index})">X</button>
       </div>
     `;
   });
 }
 
-window.checkout = async function(){
-  await checkoutCart();
-};
+function removeItem(index){
+  cart.splice(index,1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  render();
+}
 
-load();
+render();
+</script>
+
+<!-- 🔥 FIREBASE CHECKOUT ONLY -->
+<script type="module">
+import { addDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { db, login } from "./firebase.js";
+
+window.checkout = async function(){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  if(cart.length === 0){
+    alert("Cart empty ❌");
+    return;
+  }
+
+  const user = await login();
+
+  for(let item of cart){
+    await addDoc(collection(db,"orders"),{
+      email:user.email,
+      name:item.name,
+      image:item.image,
+      time:new Date()
+    });
+  }
+
+  alert("Order placed 🚀");
+
+  localStorage.removeItem("cart");
+  location.reload();
+};
 </script>
 
 </body>
