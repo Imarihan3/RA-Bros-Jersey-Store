@@ -1,13 +1,20 @@
+// 🔥 Firebase core
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// 🔐 Auth
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+// ☁️ Firestore
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ⚙️ YOUR CONFIG (yours is fine)
 const firebaseConfig = {
   apiKey: "AIzaSyD6Kn1k949hm8D8KG-0ClVLuBkacJB6c08",
   authDomain: "ra-bros.firebaseapp.com",
   projectId: "ra-bros",
 };
 
+// 🚀 Init
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -15,7 +22,8 @@ const provider = new GoogleAuthProvider();
 
 let currentUser = null;
 
-export async function login() {
+// 🔐 LOGIN FUNCTION
+async function login() {
   if (!currentUser) {
     const result = await signInWithPopup(auth, provider);
     currentUser = result.user;
@@ -23,35 +31,5 @@ export async function login() {
   return currentUser;
 }
 
-export async function addItem(item) {
-  const user = await login();
-  await addDoc(collection(db, "cart"), {
-    email: user.email,
-    item: item,
-    time: new Date()
-  });
-}
-
-export async function getCart() {
-  const user = await login();
-  const q = query(collection(db, "cart"), where("email", "==", user.email));
-  const snapshot = await getDocs(q);
-  let items = [];
-  snapshot.forEach(doc => items.push(doc.data()));
-  return items;
-}
-
-export async function placeOrder() {
-  const user = await login();
-  const items = await getCart();
-
-  for (let item of items) {
-    await addDoc(collection(db, "orders"), {
-      email: user.email,
-      item: item.item,
-      time: new Date()
-    });
-  }
-
-  alert("Order placed 🚀");
-}
+// ✅ EXPORT ONLY WHAT YOU NEED NOW
+export { db, login };
