@@ -2,270 +2,98 @@
 <html>
 <head>
 <title>Aether Inventory Vault</title>
-
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Space+Grotesk:wght@300;500;700&display=swap');
-
 :root {
-  --paradise-deep: #050a30;
-  --paradise-aqua: #00f2fe;
-  --paradise-pink: #4facfe;
-  --iridescent-gold: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
-  --neon-gold: #ffcf00;
-  --neon-glow: rgba(255, 207, 0, 0.5);
-  --glass: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --paradise-deep: #050a30; --paradise-aqua: #00f2fe; --paradise-pink: #4facfe;
+  --neon-gold: #ffcf00; --glass: rgba(255, 255, 255, 0.03);
 }
-
 body {
-  font-family: 'Space Grotesk', sans-serif;
-  margin: 0;
-  min-height: 100vh;
-  color: #fff;
-  background: 
-    linear-gradient(rgba(5, 10, 48, 0.7), rgba(0, 0, 0, 0.9)),
-    url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2000&auto=format&fit=crop'),
-    radial-gradient(circle at center, var(--paradise-pink) 0%, var(--paradise-deep) 100%);
-  background-size: cover;
-  background-blend-mode: overlay;
-  background-attachment: fixed;
-  overflow-x: hidden;
-  position: relative;
+  font-family: 'Space Grotesk', sans-serif; margin: 0; min-height: 100vh; color: #fff;
+  background: linear-gradient(rgba(5, 10, 48, 0.7), rgba(0, 0, 0, 0.9)), 
+              url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2000&auto=format&fit=crop');
+  background-size: cover; background-attachment: fixed; display: flex; flex-direction: column; align-items: center;
 }
-
-body::before {
-  content: "";
-  position: absolute;
-  top: -50%; left: -50%; width: 200%; height: 200%;
-  background: radial-gradient(circle at center, rgba(0, 242, 254, 0.1) 0%, transparent 50%);
-  animation: auroraFlow 20s linear infinite alternate;
-  pointer-events: none;
-  z-index: -1;
-}
-
-@keyframes auroraFlow {
-  0% { transform: translate(-10%, -10%) rotate(0deg); }
-  100% { transform: translate(10%, 10%) rotate(5deg); }
-}
-
-header {
-  text-align: center;
-  padding: 60px 20px;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--glass-border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-h1 {
-  font-family: 'Cinzel Decorative', cursive;
-  font-size: 2.8rem;
-  margin: 0;
-  letter-spacing: 12px;
-  text-transform: uppercase;
-  background: var(--iridescent-gold);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 15px var(--neon-glow));
-}
-
-.cart-container {
-  max-width: 900px;
-  margin: 50px auto;
-  padding: 50px;
-  background: var(--glass);
-  backdrop-filter: blur(25px);
-  border: 1px solid var(--glass-border);
-  border-radius: 4px;
-  position: relative;
-  min-height: 300px;
-}
-
-.item {
-  display: flex;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 25px;
-  margin-bottom: 30px;
-  border-radius: 4px;
-  border: 1px solid transparent;
-  transition: 0.4s;
-}
-
-.item:hover {
-  transform: translateX(10px);
-  border-color: var(--paradise-aqua);
-  box-shadow: 0 0 30px rgba(0, 242, 254, 0.1);
-}
-
-.item img {
-  width: 90px;
-  height: 90px;
-  object-fit: cover;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-.info {
-  flex: 1;
-  margin-left: 25px;
-  font-family: 'Cinzel Decorative', cursive;
-  font-size: 18px;
-}
-
-.remove {
-  background: transparent;
-  color: #ff4d4d;
-  border: 1px solid #ff4d4d;
-  padding: 8px 15px;
-  cursor: pointer;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px;
-  letter-spacing: 1px;
-}
-
-.remove:hover {
-  background: #ff4d4d;
-  color: white;
-}
-
-.empty {
-  text-align: center;
-  padding: 100px 0;
-  opacity: 0.5;
-  letter-spacing: 4px;
-}
-
-.bottom-bar {
-  margin-top: 40px;
-  text-align: center;
-  border-top: 1px solid var(--glass-border);
-  padding-top: 40px;
-}
-
-.checkout {
-  padding: 20px 60px;
-  border: 1px solid var(--neon-gold);
-  background: transparent;
-  color: var(--neon-gold);
-  font-family: 'Cinzel Decorative', cursive;
-  font-weight: 900;
-  font-size: 18px;
-  letter-spacing: 5px;
-  cursor: pointer;
-  transition: 0.5s;
-}
-
-.checkout:hover {
-  background: var(--neon-gold);
-  color: black;
-  box-shadow: 0 0 40px var(--neon-glow);
-}
-
-.back {
-  margin-top: 20px;
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.4);
-  cursor: pointer;
-  letter-spacing: 2px;
-}
+header { text-align: center; padding: 60px; width: 100%; backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+h1 { font-family: 'Cinzel Decorative', cursive; letter-spacing: 12px; color: var(--neon-gold); text-shadow: 0 0 15px rgba(255,207,0,0.5); }
+.cart-container { width: 90% ; max-width: 800px; margin: 40px; padding: 40px; background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; }
+.item { display: flex; align-items: center; background: rgba(0,0,0,0.4); padding: 20px; margin-bottom: 20px; border-left: 3px solid var(--paradise-aqua); transition: 0.3s; }
+.item:hover { transform: scale(1.02); background: rgba(0,242,254,0.05); }
+.item img { width: 80px; height: 80px; object-fit: cover; border: 1px solid #333; }
+.info { flex: 1; margin-left: 20px; font-family: 'Cinzel Decorative', cursive; font-size: 1.1rem; }
+.remove { background: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; padding: 8px; cursor: pointer; font-family: 'Space Grotesk'; font-size: 10px; letter-spacing: 1px; }
+.remove:hover { background: #ff4d4d; color: #fff; }
+.checkout { width: 100%; padding: 20px; margin-top: 20px; background: transparent; border: 1px solid var(--neon-gold); color: var(--neon-gold); font-family: 'Cinzel Decorative'; font-weight: 900; letter-spacing: 5px; cursor: pointer; transition: 0.5s; }
+.checkout:hover { background: var(--neon-gold); color: #000; box-shadow: 0 0 30px var(--neon-gold); }
+.back { margin-top: 20px; background: transparent; border: none; color: #aaa; cursor: pointer; letter-spacing: 2px; }
 </style>
 </head>
-
 <body>
 
-<header>
-  <h1>AETHER VAULT</h1>
-</header>
+<header><h1>AETHER VAULT</h1></header>
 
 <div class="cart-container">
   <div id="cart"></div>
-
-  <div class="bottom-bar">
-    <button class="checkout" onclick="checkout()">COMMAND ORDER 💳</button>
-    <br>
-    <button class="back" onclick="history.back()">RETURN TO SHELL</button>
-  </div>
+  <button class="checkout" onclick="checkout()">COMMAND ORDER 💳</button>
+  <center><button class="back" onclick="history.back()">RETURN TO SHELL</button></center>
 </div>
 
 <script>
-// Logic to display the cart
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-const cartDiv = document.getElementById("cart");
+  // UI LOGIC (Removes items from view and localStorage)
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cartDiv = document.getElementById("cart");
 
-function renderCart() {
-  cartDiv.innerHTML = "";
-  if (cart.length === 0) {
-    cartDiv.innerHTML = "<div class='empty'>THE ARCHIVE IS EMPTY</div>";
-    return;
+  function renderCart() {
+    cartDiv.innerHTML = cart.length === 0 ? "<div style='text-align:center; opacity:0.5;'>ARCHIVE EMPTY</div>" : "";
+    cart.forEach((item, index) => {
+      cartDiv.innerHTML += `
+        <div class="item">
+          <img src="${item.image}">
+          <div class="info">${item.name}</div>
+          <button class="remove" onclick="removeItem(${index})">PRUNE</button>
+        </div>`;
+    });
   }
 
-  cart.forEach((item, index) => {
-    cartDiv.innerHTML += `
-      <div class="item">
-        <img src="${item.image}">
-        <div class="info">${item.name}</div>
-        <button class="remove" onclick="removeItem(${index})">PRUNE</button>
-      </div>
-    `;
-  });
-}
-
-window.removeItem = function(index) {
-  cart.splice(index, 1);
-  localStorage.setItem("cart", JSON.stringify(cart));
+  window.removeItem = (index) => {
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  };
   renderCart();
-};
-
-renderCart();
 </script>
 
 <script type="module">
-import { db, login } from "./firebase.js";
-import { addDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  // FIREBASE LOGIC (Imports from firebase.js)
+  import { db, login } from "./firebase.js";
+  import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// We attach the function to the 'window' so the HTML button can find it
-window.checkout = async function() {
-  let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+  window.checkout = async function() {
+    const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (currentCart.length === 0) return alert("Archive is empty! ❌");
 
-  if (currentCart.length === 0) {
-    alert("The Archive is empty, Primal ❌");
-    return;
-  }
+    try {
+      const user = await login();
+      if (!user) return;
 
-  try {
-    // 1. Trigger the Google Login from firebase.js
-    const user = await login();
+      // Upload all items simultaneously
+      await Promise.all(currentCart.map(item => 
+        addDoc(collection(db, "orders"), {
+          email: user.email,
+          name: item.name,
+          image: item.image,
+          status: "materialized",
+          time: serverTimestamp()
+        })
+      ));
 
-    if (!user) {
-      alert("Authentication Failed ❌");
-      return;
+      alert("Order secured in the Eternal Archive! 🚀🔥");
+      localStorage.removeItem("cart");
+      window.location.reload();
+    } catch (e) {
+      alert("System Error: " + e.message);
     }
-
-    // 2. Upload each item to Firestore
-    for (let item of currentCart) {
-      await addDoc(collection(db, "orders"), {
-        email: user.email,
-        name: item.name,
-        image: item.image,
-        timestamp: new Date() // Changed to 'timestamp' for better sorting later
-      });
-    }
-
-    alert("Order materialized in the Aether Archive 🚀🔥");
-
-    // 3. Clear local storage and refresh
-    localStorage.removeItem("cart");
-    location.reload();
-
-  } catch (e) {
-    console.error("Firebase Error:", e);
-    alert("Materialization failed. Ensure Firebase rules are set to public/auth.");
-  }
-};
+  };
 </script>
-
 </body>
 </html>
