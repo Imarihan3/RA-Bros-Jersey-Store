@@ -61,6 +61,7 @@ body { margin:0; overflow:hidden; background:#87CEEB; font-family:sans-serif; to
   border:1px solid white;
   font-weight:bold;
   transform:translate(-50%,-100%);
+  pointer-events: none;
 }
 </style>
 
@@ -100,11 +101,9 @@ window.startApp = function() {
   setupJoystick();
 };
 
-// JOYSTICK
 function setupJoystick() {
   const container = document.getElementById('joystick-container');
   const knob = document.getElementById('joystick-knob');
-
   let rect;
   const centerX = 60;
   const centerY = 60;
@@ -112,51 +111,26 @@ function setupJoystick() {
   function move(e) {
     if (!isMoving) return;
     if (e.cancelable) e.preventDefault();
-
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
+    const clientX = e.touches ? e.touches.clientX : e.clientX;
+    const clientY = e.touches ? e.touches.clientY : e.clientY;
     let x = clientX - rect.left - centerX;
     let y = clientY - rect.top - centerY;
-
     const dist = Math.min(Math.sqrt(x*x + y*y), 50);
     const angle = Math.atan2(y, x);
-
     x = Math.cos(angle) * dist;
     y = Math.sin(angle) * dist;
-
     knob.style.transform = `translate(${x}px, ${y}px)`;
     joyPos = { x: x/50, y: y/50 };
   }
 
-  container.addEventListener('touchstart', e => {
-    isMoving = true;
-    rect = container.getBoundingClientRect();
-    move(e);
-  }, {passive:false});
-
+  container.addEventListener('touchstart', e => { isMoving = true; rect = container.getBoundingClientRect(); move(e); }, {passive:false});
   window.addEventListener('touchmove', move, {passive:false});
-  window.addEventListener('touchend', () => {
-    isMoving = false;
-    knob.style.transform = 'translate(0px,0px)';
-    joyPos = {x:0,y:0};
-  });
-
-  container.addEventListener('mousedown', e => {
-    isMoving = true;
-    rect = container.getBoundingClientRect();
-    move(e);
-  });
-
+  window.addEventListener('touchend', () => { isMoving = false; knob.style.transform = 'translate(0px,0px)'; joyPos = {x:0,y:0}; });
+  container.addEventListener('mousedown', e => { isMoving = true; rect = container.getBoundingClientRect(); move(e); });
   window.addEventListener('mousemove', move);
-  window.addEventListener('mouseup', () => {
-    isMoving = false;
-    knob.style.transform = 'translate(0px,0px)';
-    joyPos = {x:0,y:0};
-  });
+  window.addEventListener('mouseup', () => { isMoving = false; knob.style.transform = 'translate(0px,0px)'; joyPos = {x:0,y:0}; });
 }
 
-// 3D
 function init3D() {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x87CEEB);
@@ -166,20 +140,15 @@ function init3D() {
   renderer.setSize(innerWidth, innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  scene.add(new THREE.AmbientLight(0xffffff,1));
-
+  scene.add(new THREE.AmbientLight(0xffffff, 0.7));
   const light = new THREE.DirectionalLight(0xffffff, 0.8);
   light.position.set(10,20,10);
   scene.add(light);
 
-  // 🌱 GRASS TEXTURE
   const loader = new THREE.TextureLoader();
   const grass = loader.load("https://threejs.org/examples/textures/terrain/grasslight-big.jpg");
-
-  grass.wrapS = THREE.RepeatWrapping;
-  grass.wrapT = THREE.RepeatWrapping;
+  grass.wrapS = grass.wrapT = THREE.RepeatWrapping;
   grass.repeat.set(20,20);
-
   const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(100,100),
     new THREE.MeshStandardMaterial({ map: grass })
@@ -187,61 +156,44 @@ function init3D() {
   floor.rotation.x = -Math.PI/2;
   scene.add(floor);
 
-  // ⚽ FIELD LINES (no glitch)
   const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-  const y = 0.02;
-
+  const yLine = 0.02;
   const centerLine = new THREE.Mesh(new THREE.PlaneGeometry(100,0.3), lineMat);
   centerLine.rotation.x = -Math.PI/2;
-  centerLine.position.y = y;
+  centerLine.position.y = yLine;
   scene.add(centerLine);
 
   const circle = new THREE.Mesh(new THREE.RingGeometry(9,9.5,32), lineMat);
   circle.rotation.x = -Math.PI/2;
-  circle.position.y = y;
+  circle.position.y = yLine;
   scene.add(circle);
 
   function box(z){
     const b = new THREE.Mesh(new THREE.PlaneGeometry(20,8), lineMat);
     b.rotation.x = -Math.PI/2;
-    b.position.set(0,y,z);
+    b.position.set(0,yLine,z);
     scene.add(b);
   }
+  box(40); box(-40);
 
-  box(40);
-  box(-40);
-
-  // 🥅 GOALS
   function createGoal(x, z) {
     const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-
-    const width = 7.32;
-    const height = 2.44;
-    const depth = 2;
-
+    const width = 7.32; const height = 2.44; const depth = 2;
     const left = new THREE.Mesh(new THREE.BoxGeometry(0.2,height,0.2), material);
     left.position.set(x - width/2, height/2, z);
-
     const right = new THREE.Mesh(new THREE.BoxGeometry(0.2,height,0.2), material);
     right.position.set(x + width/2, height/2, z);
-
     const top = new THREE.Mesh(new THREE.BoxGeometry(width,0.2,0.2), material);
     top.position.set(x, height, z);
-
     const backTop = new THREE.Mesh(new THREE.BoxGeometry(width,0.2,0.2), material);
     backTop.position.set(x, height, z - depth);
-
     const backLeft = new THREE.Mesh(new THREE.BoxGeometry(0.2,height,0.2), material);
     backLeft.position.set(x - width/2, height/2, z - depth);
-
     const backRight = new THREE.Mesh(new THREE.BoxGeometry(0.2,height,0.2), material);
     backRight.position.set(x + width/2, height/2, z - depth);
-
     scene.add(left, right, top, backTop, backLeft, backRight);
   }
-
-  createGoal(0, 50);
-  createGoal(0, -50);
+  createGoal(0, 50); createGoal(0, -50);
 
   const player = new THREE.Mesh(
     new THREE.BoxGeometry(2,2,2),
@@ -252,25 +204,79 @@ function init3D() {
 
   const stores = [];
 
-  function addStore(x,z,color,url,labelId) {
-    const b = new THREE.Mesh(
-      new THREE.BoxGeometry(5,5,5),
-      new THREE.MeshStandardMaterial({color})
-    );
-    b.position.set(x,2.5,z);
-    b.userData = { url, label: document.getElementById(labelId) };
-    scene.add(b);
-    stores.push(b);
+  function addStore(x, z, color, url, labelId) {
+    const group = new THREE.Group();
+    group.position.set(x, 0, z);
+
+    // 💿 GENERATOR DISC
+    const discGeo = new THREE.CylinderGeometry(3.5, 3.5, 0.4, 32);
+    const discMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.9, roughness: 0.1 });
+    const disc = new THREE.Mesh(discGeo, discMat);
+    disc.position.y = 0.2;
+    group.add(disc);
+
+    const ringGeo = new THREE.TorusGeometry(3.2, 0.08, 16, 100);
+    const ringMat = new THREE.MeshBasicMaterial({ color: color });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x = Math.PI/2;
+    ring.position.y = 0.41;
+    group.add(ring);
+
+    // 💎 ULTRA-BRIGHT HOLOGRAM
+    const holoGroup = new THREE.Group();
+    holoGroup.position.y = 5;
+
+    const geometry = new THREE.IcosahedronGeometry(2.8, 0);
+    
+    // Wireframe
+    const wireframe = new THREE.WireframeGeometry(geometry);
+    const lineMat = new THREE.LineBasicMaterial({ color: color, linewidth: 2 });
+    const lineMesh = new THREE.LineSegments(wireframe, lineMat);
+    holoGroup.add(lineMesh);
+
+    // Glowing Outer Shell
+    const coreMat = new THREE.MeshStandardMaterial({
+      color: color,
+      transparent: true,
+      opacity: 0.5,
+      emissive: color,
+      emissiveIntensity: 15 
+    });
+    const coreMesh = new THREE.Mesh(geometry, coreMat);
+    holoGroup.add(coreMesh);
+
+    // Blinding Inner Core (White)
+    const innerGeo = new THREE.IcosahedronGeometry(1.3, 0);
+    const innerMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const innerCore = new THREE.Mesh(innerGeo, innerMat);
+    holoGroup.add(innerCore);
+
+    group.add(holoGroup);
+
+    // Light Glow
+    const pLight = new THREE.PointLight(color, 4, 15);
+    pLight.position.y = 5;
+    group.add(pLight);
+
+    group.userData = { url, label: document.getElementById(labelId), holoGroup };
+    scene.add(group);
+    stores.push(group);
   }
 
-  addStore(-20,-20,0xff0000,"normaljerseys.html","l1");
-  addStore(0,-35,0x00ff00,"lejerseys.html","l2");
-  addStore(20,-20,0x0000ff,"customisablejerseys.html","l3");
+  addStore(-20,-20,0xff0000,"https://imarihan3.github.io/RA-Bros-Jersey-Store/normaljerseys.html","l1");
+  addStore(0,-35,0x00ff00,"https://imarihan3.github.io/RA-Bros-Jersey-Store/lejerseys.html","l2");
+  addStore(20,-20,0x0000ff,"https://imarihan3.github.io/RA-Bros-Jersey-Store/customisablejerseys.html","l3");
 
   const enterBtn = document.getElementById("enterBtn");
 
   function animate() {
     requestAnimationFrame(animate);
+
+    const time = Date.now() * 0.002;
+    stores.forEach(s => {
+      s.userData.holoGroup.rotation.y += 0.02;
+      s.userData.holoGroup.position.y = 5 + Math.sin(time) * 0.5;
+    });
 
     if (Math.abs(joyPos.y) > 0.1) player.translateZ(joyPos.y * 0.5);
     if (Math.abs(joyPos.x) > 0.1) player.rotation.y -= joyPos.x * 0.05;
@@ -280,33 +286,22 @@ function init3D() {
     camera.lookAt(player.position);
 
     currentStore = null;
-
-    stores.forEach(b => {
-      const dist = player.position.distanceTo(b.position);
-
-      const v = b.position.clone().project(camera);
-      b.userData.label.style.left = (v.x*0.5+0.5)*innerWidth+'px';
-      b.userData.label.style.top = (v.y*-0.5+0.5)*innerHeight-40+'px';
-
-      if (dist < 5) currentStore = b;
+    stores.forEach(s => {
+      const dist = player.position.distanceTo(s.position);
+      const v = s.position.clone().add(new THREE.Vector3(0,5,0)).project(camera);
+      s.userData.label.style.left = (v.x*0.5+0.5)*innerWidth+'px';
+      s.userData.label.style.top = (v.y*-0.5+0.5)*innerHeight-40+'px';
+      if (dist < 6) currentStore = s;
     });
 
     enterBtn.style.display = currentStore ? "block" : "none";
-
     renderer.render(scene, camera);
   }
 
   animate();
 
-  enterBtn.onclick = () => {
-    if (currentStore) window.location.href = currentStore.userData.url;
-  };
-
-  window.onkeydown = e => {
-    if (e.key === "Enter" && currentStore)
-      window.location.href = currentStore.userData.url;
-  };
-
+  enterBtn.onclick = () => { if (currentStore) window.location.href = currentStore.userData.url; };
+  window.onkeydown = e => { if (e.key === "Enter" && currentStore) window.location.href = currentStore.userData.url; };
   window.addEventListener('resize', () => {
     camera.aspect = innerWidth/innerHeight;
     camera.updateProjectionMatrix();
