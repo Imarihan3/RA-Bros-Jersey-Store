@@ -1,41 +1,205 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Custom Jersey</title>
+<title>🏛️ The Magnum Opus</title>
 
 <style>
-body { margin:0; font-family:Arial; background:#0f0f0f; color:white; text-align:center; }
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,500;1,600&display=swap');
 
+:root {
+  --gold-primary: #f8db70;
+  --gold-deep: #b8860b;
+  --gold-shine: #fff7d1;
+}
+
+body { 
+  margin: 0; 
+  padding: 0;
+  font-family: 'Cormorant Garamond', serif; 
+  /* The Living Masterpiece Background */
+  background: 
+    linear-gradient(rgba(10, 5, 0, 0.7), rgba(15, 10, 5, 0.85)),
+    url('https://images.unsplash.com/photo-1578321272176-b7bbc067985c?q=80&w=2000&auto=format&fit=crop'), /* Oil painting texture */
+    url('https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=2000&auto=format&fit=crop'); /* Renaissance palette */
+  background-size: cover;
+  background-blend-mode: multiply;
+  background-attachment: fixed;
+  color: #fcf6e5;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Moving Golden Light Shaft (Divine Intervention) */
+body::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(255, 230, 150, 0.08) 0%, transparent 60%);
+  animation: divineLight 15s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes divineLight {
+  from { transform: translate(-10%, -10%); }
+  to { transform: translate(10%, 10%); }
+}
+
+/* Floating Gold Particle Field (The Glitter) */
+body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--gold-shine) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.15;
+  animation: glitterPulse 8s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes glitterPulse {
+  0%, 100% { opacity: 0.05; transform: translateY(0); }
+  50% { opacity: 0.2; transform: translateY(-20px); }
+}
+
+/* Navigation Plaque */
+.cart-btn {
+  position: fixed;
+  top: 40px;
+  right: 40px;
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold-primary));
+  border: 1px solid #000;
+  color: #000;
+  padding: 12px 30px;
+  font-family: 'Cinzel Decorative', cursive;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 4px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 5px rgba(255,255,255,0.5);
+  transition: 0.4s;
+  z-index: 10;
+}
+
+.cart-btn:hover {
+  filter: brightness(1.2);
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* The Grand Gilded Frame */
 .container {
-  padding:40px;
+  position: relative;
+  background: rgba(15, 10, 5, 0.9);
+  padding: 70px;
+  border-radius: 4px;
+  width: 450px;
+  text-align: center;
+  
+  /* Multi-layered Imperial Frame */
+  border: 15px solid transparent;
+  border-image: url('https://www.transparenttextures.com/patterns/black-paper.png') 30 stretch;
+  outline: 5px double var(--gold-primary);
+  outline-offset: 10px;
+  box-shadow: 
+    0 0 0 15px #111,
+    0 50px 100px rgba(0, 0, 0, 1),
+    inset 0 0 100px rgba(184, 134, 11, 0.2);
+  
+  animation: vesselFloat 6s ease-in-out infinite;
 }
 
+@keyframes vesselFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+h1 {
+  font-family: 'Cinzel Decorative', cursive;
+  font-weight: 900;
+  font-size: 2.5rem;
+  margin: 0 0 50px 0;
+  color: var(--gold-primary);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(184, 134, 11, 0.5);
+  letter-spacing: 8px;
+}
+
+/* Calligraphic Inputs */
 input {
-  padding:10px;
-  margin:10px;
-  width:200px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--gold-deep);
+  padding: 20px 10px;
+  color: #fff;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-style: italic;
+  outline: none;
+  margin-bottom: 40px;
+  transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
 }
 
-button {
-  padding:10px;
-  cursor:pointer;
+input:focus {
+  border-bottom: 1px solid var(--gold-shine);
+  padding-left: 20px;
+  background: rgba(255, 255, 255, 0.03);
 }
+
+input::placeholder {
+  color: rgba(248, 219, 112, 0.2);
+  font-size: 0.9rem;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+/* The Sovereign Button */
+.add-btn {
+  width: 100%;
+  background: radial-gradient(circle at center, var(--gold-primary), var(--gold-deep));
+  border: 1px solid #4d3a00;
+  color: #000;
+  padding: 22px;
+  font-family: 'Cinzel Decorative', cursive;
+  font-weight: 900;
+  font-size: 1.1rem;
+  letter-spacing: 5px;
+  cursor: pointer;
+  transition: 0.5s;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.add-btn:hover {
+  letter-spacing: 10px;
+  filter: saturate(1.5) brightness(1.1);
+  box-shadow: 0 15px 40px rgba(184, 134, 11, 0.4);
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>🎨 Custom Jersey</h1>
-<button onclick="location.href='cart.html'">🛒 Cart</button>
+<button class="cart-btn" onclick="location.href='cart.html'">🏛️ THE GALLERY</button>
 
 <div class="container">
-<input id="name" placeholder="Name"><br>
-<input id="number" placeholder="Number"><br>
+  <h1>ETERNALISE</h1>
+  
+  <input id="name" placeholder="Inscribe Identity">
+  <input id="number" placeholder="Sacred Digit">
 
-<button onclick="addCustom()">Add Custom 🛒</button>
+  <button class="add-btn" onclick="addCustom()">COMMAND DESIGN 🛒</button>
 </div>
 
 <script>
+/* Function logic is untouched. 
+   Identical to your original code to ensure cart connectivity. */
 function addCustom(){
   const name = document.getElementById("name").value;
   const number = document.getElementById("number").value;
