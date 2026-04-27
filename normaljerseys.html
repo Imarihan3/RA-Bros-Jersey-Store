@@ -1,193 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>🏝️ Paradise Jerseys</title>
-
-<style>
-:root {
-  /* Paradise Palette: Ocean Blue, Sunset Pink, and White Sand */
-  --paradise-gradient: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-  --sunset-accent: #ff9a9e;
-  --glass: rgba(255, 255, 255, 0.25);
-  --card-text: #2d3436;
-}
-
-body { 
-  margin: 0; 
-  font-family: 'Poppins', 'Segoe UI', sans-serif; 
-  /* A soft, beachy gradient background */
-  background: linear-gradient(to bottom, #e0c3fc 0%, #8ec5fc 100%);
-  background-attachment: fixed;
-  color: #333; 
-  min-height: 100vh;
-}
-
-header {
-  text-align: center;
-  padding: 60px 20px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-}
-
-h1 {
-  margin: 0;
-  font-size: 3rem;
-  font-weight: 800;
-  color: #ffffff;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-  justify-content: center;
-  padding: 60px 20px;
-}
-
-/* Glassmorphism Cards */
-.card {
-  background: var(--glass);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  padding: 20px;
-  border-radius: 30px;
-  width: 260px;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.card:hover {
-  transform: translateY(-15px) scale(1.02);
-  background: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
-}
-
-.card img {
-  width: 100%;
-  height: 280px;
-  object-fit: cover;
-  border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-.card p {
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: var(--card-text);
-  margin: 20px 0 15px 0;
-}
-
-/* Paradise Button Styling */
-button {
-  background: white;
-  color: #8ec5fc;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 50px;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-button:hover {
-  background: var(--sunset-accent);
-  color: white;
-  transform: scale(1.1);
-  box-shadow: 0 8px 25px rgba(255, 154, 158, 0.4);
-}
-
-header button {
-  margin-top: 20px;
-  background: rgba(255,255,255,0.8);
-  color: #667eea;
-}
-
-/* Subtle Floating Animation for the grid */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
-
-.card:nth-child(even) {
-  animation: float 6s ease-in-out infinite;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: #f1f1f1; }
-::-webkit-scrollbar-thumb { 
-  background: linear-gradient(#ff9a9e, #fad0c4); 
-  border-radius: 10px; 
-}
-
-</style>
-</head>
-
-<body>
-
-<header>
-  <h1>🏝️ PARADISE JERSEYS</h1>
-  <button onclick="location.href='cart.html'">🛒 VIEW CART</button>
-</header>
-
 <div class="grid" id="grid"></div>
 
-<script>
-// Logic remains identical to your original version
-const items = [
-{name:"Pelé", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs2cpsxkRZN1s-LTr-3gLBOhDUD79mpcRFLA&s"},
-{name:"Diego Maradona", img:"https://m.media-amazon.com/images/I/71zewDlzHbL._AC_UY1100_.jpg"},
-{name:"Lionel Messi", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6w4qaaNxvx5l01G958Jv-Y7N9gKAEKVbF6Q&s"},
-{name:"Cristiano Ronaldo", img:"https://m.media-amazon.com/images/I/61Vq0NatbbL._AC_UY1100_.jpg"},
-{name:"Zinedine Zidane", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmKyoLfibamHvyu-EmqrwWbArfdRNqSMg8Bw&s"},
-{name:"Johan Cruyff", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7vbGHf4cZnMksP6J4MqCc1yJHUBYlxL0ICA&s"},
-{name:"Ronaldo Nazário", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXav2vwjnPh10jfmh1XoFafpvCUBKOhzaEFw&s"},
-{name:"David Beckham", img:"https://m.media-amazon.com/images/I/61F0kQC81uL._SL1500_.jpg"},
-{name:"Thierry Henry", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmZbpi7oozH3XrsKVyMrSr27do3Rd8UASnhg&s"},
-{name:"Paolo Maldini", img:"https://m.media-amazon.com/images/I/71nswOq+vcL._AC_UY1100_.jpg"},
-{name:"Andrés Iniesta", img:"https://m.media-amazon.com/images/I/51w+fQjpzML._AC_SY1000_.jpg"},
-{name:"George Best", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxc-uTzOZJA9FzaSTLIvjpxhNe9mQj2bfoqA&s"},
-{name:"Franz Beckenbauer", img:"https://campeonsports.com/cdn/shop/files/rn-image_picker_lib_temp_e91f1749-f65a-48d1-9c59-a05639414de4.jpg?v=1765488226"},
-{name:"Gerd Müller", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRR3VMddTDYB4pniIPAWMmRPYhjVSlJi2rPsQ&s"},
-{name:"Kaka", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdFnI68y9rY4mj14aC3318gXykSzfDR6vZkw&s"},
-{name:"Andrea Pirlo", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpXHdVwOW0JcQR_vuxkoD9BKmY7sgAvesjGg&s"},
-{name:"Roberto Carlos", img:"https://m.media-amazon.com/images/I/41Ii+81GA3L.jpg"},
-{name:"Ronaldinho", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHB_0JhOpb5aU67b4IKOefRD9VjvPWtER7OQ&s"},
-{name:"Lev Yashin", img:"https://m.media-amazon.com/images/I/51kO15IYIoL._AC_UF894,1000_QL80_.jpg"},
-{name:"Trent Alexander-Arnold", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOnj_v8N2R3mA8297Ge_Bcqx0Nr8g-ldoAnw&s"}
-];
+<script type="module">
+import { db, collection, query, where, onSnapshot } from "./firebase.js";
 
 const grid = document.getElementById("grid");
+const q = query(collection(db, "jerseys"), where("store", "==", "normal"));
 
-items.forEach(i=>{
-  grid.innerHTML += `
-    <div class="card">
-      <img src="${i.img}">
-      <p>${i.name}</p>
-      <button onclick="addToCart('${i.name}','${i.img}')">Add to Cart</button>
-    </div>
-  `;
+onSnapshot(q, (snapshot) => {
+    grid.innerHTML = "";
+    snapshot.forEach((doc) => {
+        const item = doc.data();
+        grid.innerHTML += `
+            <div class="card">
+                <img src="${item.image}" onerror="this.src='https://via.placeholder.com/280?text=Jersey'">
+                <p>${item.name}</p>
+                <button onclick="addToCart('${item.name}','${item.image}')">Add to Cart</button>
+            </div>`;
+    });
 });
 
-function addToCart(name,image){
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push({name,image});
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert(name + " added to your paradise 🛒🏝️");
-}
+window.addToCart = (name, image) => {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.push({name, image, price: 1000});
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert(name + " added to Paradise 🏝️");
+};
 </script>
-
-</body>
-</html>
