@@ -9,7 +9,6 @@
         body { background: #0a0a0a; color: white; font-family: 'Inter', sans-serif; }
         .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; }
         .neon-text { text-shadow: 0 0 10px #ff0033; }
-        /* Custom Scrollbar for a cleaner look */
         #inventory-list::-webkit-scrollbar { width: 4px; }
         #inventory-list::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
@@ -70,13 +69,10 @@
 
         // Login Logic
         document.getElementById('loginBtn').onclick = async () => {
-            console.log("Login clicked...");
             try {
                 const user = await login();
-                console.log("Authenticated as:", user.email);
-                
-                if (user.email === adminEmail) {
-                    document.getElementById('login-screen').classList.add('hidden');
+                if (user && user.email === adminEmail) {
+                    document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('dashboard').classList.remove('hidden');
                     document.getElementById('user-tag').innerText = user.email;
                     startLiveFeed();
@@ -98,14 +94,12 @@
                 return;
             }
 
-            console.log("Saving to Firebase...");
             try {
                 await addNewItem("jerseys", {
                     name: name,
                     price: Number(price),
                     timestamp: serverTimestamp()
                 });
-                console.log("Saved successfully!");
                 document.getElementById('itemName').value = "";
                 document.getElementById('itemPrice').value = "";
             } catch (error) {
@@ -115,16 +109,17 @@
 
         // Live Monitor Logic
         function startLiveFeed() {
-            console.log("Connecting to live database feed...");
+            const list = document.getElementById('inventory-list');
+            if (!list) return; // Prevention of the appendChild error
+
             const q = query(collection(db, "jerseys"), orderBy("timestamp", "desc"));
             
             onSnapshot(q, (snapshot) => {
-                const list = document.getElementById('inventory-list');
-                document.getElementById('item-count').innerText = `${snapshot.size} Items`;
                 list.innerHTML = "";
+                document.getElementById('item-count').innerText = `${snapshot.size} Items`;
 
                 if (snapshot.empty) {
-                    list.innerHTML = `<p class="text-gray-600 italic text-center py-10">Vault is empty. Add your first item.</p>`;
+                    list.innerHTML = `<p class="text-gray-600 italic text-center py-10">Vault is empty.</p>`;
                     return;
                 }
 
@@ -135,8 +130,8 @@
                     
                     itemDiv.innerHTML = `
                         <div>
-                            <p class="font-bold text-white">${data.name}</p>
-                            <p class="text-[10px] text-gray-500 uppercase font-mono tracking-widest">${data.price} Coins</p>
+                            <p class="font-bold text-white">${data.name || 'Unnamed Item'}</p>
+                            <p class="text-[10px] text-gray-500 uppercase font-mono tracking-widest">${data.price || 0} Coins</p>
                         </div>
                         <button class="delete-btn text-[10px] bg-red-600/10 text-red-500 px-3 py-1 rounded hover:bg-red-600 hover:text-white opacity-0 group-hover:opacity-100 transition duration-300" data-id="${itemDoc.id}">
                             DELETE
@@ -145,18 +140,22 @@
                     list.appendChild(itemDiv);
                 });
 
-                // Re-bind delete buttons
-                document.querySelectorAll('.delete-btn').forEach(btn => {
+                // Attach delete functionality
+                list.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.onclick = async (e) => {
                         const id = e.target.getAttribute('data-id');
-                        if(confirm("Permanently delete this from the server?")) {
-                            await deleteDoc(doc(db, "jerseys", id));
+                        if(confirm("Permanently delete this?")) {
+                            try {
+                                await deleteDoc(doc(db, "jerseys", id));
+                            } catch (err) {
+                                console.error("Delete failed:", err);
+                            }
                         }
                     };
                 });
             }, (error) => {
-                console.error("Live feed error:", error);
-                document.getElementById('inventory-list').innerHTML = `<p class="text-red-500">Database connection failed. Check your Firestore Rules.</p>`;
+                console.error("Connection error:", error);
+                list.innerHTML = `<p class="text-red-500">Check Firestore Rules.</p>`;
             });
         }
     </script>
