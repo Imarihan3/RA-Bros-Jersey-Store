@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RA BROS | Admin HQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0f0f0f; color: white; font-family: sans-serif; }
+        .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; }
+    </style>
+</head>
+<body class="p-6">
+
+    <div id="login-screen" class="fixed inset-0 flex items-center justify-center bg-black z-50">
+        <div class="text-center">
+            <h1 class="text-3xl font-black mb-6 italic text-red-600">RA BROS HQ</h1>
+            <button id="loginBtn" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:scale-105 transition">
+                Login as Arihan
+            </button>
+        </div>
+    </div>
+
+    <div id="dashboard" class="hidden max-w-4xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <h2 class="text-xl font-bold border-l-4 border-red-600 pl-3">DATABASE CONTROL</h2>
+            <span id="user-tag" class="text-xs text-gray-500 uppercase tracking-widest"></span>
+        </header>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="glass p-6">
+                <h3 class="font-bold mb-4 text-blue-400">Add New Item</h3>
+                <input type="text" id="itemName" placeholder="Jersey Name (e.g. Blue Fire)" class="w-full bg-black/50 border border-gray-700 p-3 rounded mb-3 outline-none focus:border-blue-500">
+                <input type="number" id="itemPrice" placeholder="Price (e.g. 500)" class="w-full bg-black/50 border border-gray-700 p-3 rounded mb-4 outline-none focus:border-blue-500">
+                <button id="submitBtn" class="w-full bg-blue-600 py-3 rounded-lg font-bold hover:bg-blue-500 transition">PUSH TO FIREBASE</button>
+            </div>
+
+            <div class="glass p-6">
+                <h3 class="font-bold mb-4 text-green-400">Live Inventory</h3>
+                <div id="inventory-list" class="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+                    <p class="text-gray-600 italic">Connecting to vault...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { db, login } from "./firebase.js";
+        import { collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const adminEmail = "arihan.16jan@gmail.com";
+
+        // --- LOGIN LOGIC ---
+        document.getElementById('loginBtn').onclick = async () => {
+            const user = await login();
+            if (user.email === adminEmail) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('user-tag').innerText = user.email;
+                startMonitoring(); // Start showing the list
+            } else {
+                alert("ACCESS DENIED: Unauthorized User");
+            }
+        };
+
+        // --- SAVE LOGIC (Saves multiple) ---
+        document.getElementById('submitBtn').onclick = async () => {
+            const name = document.getElementById('itemName').value;
+            const price = document.getElementById('itemPrice').value;
+
+            if(!name || !price) return alert("Fill all fields!");
+
+            try {
+                await addDoc(collection(db, "jerseys"), {
+                    name: name,
+                    price: Number(price),
+                    timestamp: serverTimestamp()
+                });
+                document.getElementById('itemName').value = "";
+                document.getElementById('itemPrice').value = "";
+            } catch (err) {
+                console.error(err);
+                alert("Error saving. Check console.");
+            }
+        };
+
+        // --- CLEAN LIST LOGIC ---
+        function startMonitoring() {
+            const q = query(collection(db, "jerseys"), orderBy("timestamp", "desc"));
+            onSnapshot(q, (snapshot) => {
+                const list = document.getElementById('inventory-list');
+                list.innerHTML = "";
+                
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    list.innerHTML += `
+                        <div class="flex justify-between p-3 bg-white/5 rounded border border-white/5">
+                            <span class="font-medium">${data.name}</span>
+                            <span class="text-blue-400">$${data.price}</span>
+                        </div>
+                    `;
+                });
+            });
+        }
+    </script>
+</body>
+</html>
