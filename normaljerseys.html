@@ -55,14 +55,26 @@ button {
 
 <script>
 const items = [
-{name:"Classic Home", img:"https://m.media-amazon.com/images/I/71zewDlzHbL._AC_UY1100_.jpg"},
-{name:"Blue Strike", img:"https://m.media-amazon.com/images/I/61Vq0NatbbL._AC_UY1100_.jpg"},
-{name:"Urban Fit", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7vbGHf4cZnMksP6J4MqCc1yJHUBYlxL0ICA&s"},
-{name:"Elite Black", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXav2vwjnPh10jfmh1XoFafpvCUBKOhzaEFw&s"},
-{name:"Royal Blue", img:"https://m.media-amazon.com/images/I/61F0kQC81uL._SL1500_.jpg"},
-{name:"Forest Green", img:"https://m.media-amazon.com/images/I/71nswOq+vcL._AC_UY1100_.jpg"},
-{name:"Retro Gold", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxc-uTzOZJA9FzaSTLIvjpxhNe9mQj2bfoqA&s"},
-{name:"Carbon Core", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRR3VMddTDYB4pniIPAWMmRPYhjVSlJi2rPsQ&s"}
+{name:"Pelé", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs2cpsxkRZN1s-LTr-3gLBOhDUD79mpcRFLA&s"},
+{name:"Diego Maradona", img:"https://m.media-amazon.com/images/I/71zewDlzHbL._AC_UY1100_.jpg"},
+{name:"Lionel Messi", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6w4qaaNxvx5l01G958Jv-Y7N9gKAEKVbF6Q&s"},
+{name:"Cristiano Ronaldo", img:"https://m.media-amazon.com/images/I/61Vq0NatbbL._AC_UY1100_.jpg"},
+{name:"Zinedine Zidane", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmKyoLfibamHvyu-EmqrwWbArfdRNqSMg8Bw&s"},
+{name:"Johan Cruyff", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7vbGHf4cZnMksP6J4MqCc1yJHUBYlxL0ICA&s"},
+{name:"Ronaldo Nazário", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXav2vwjnPh10jfmh1XoFafpvCUBKOhzaEFw&s"},
+{name:"David Beckham", img:"https://m.media-amazon.com/images/I/61F0kQC81uL._SL1500_.jpg"},
+{name:"Thierry Henry", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmZbpi7oozH3XrsKVyMrSr27do3Rd8UASnhg&s"},
+{name:"Paolo Maldini", img:"https://m.media-amazon.com/images/I/71nswOq+vcL._AC_UY1100_.jpg"},
+{name:"Andrés Iniesta", img:"https://m.media-amazon.com/images/I/51w+fQjpzML._AC_SY1000_.jpg"},
+{name:"George Best", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxc-uTzOZJA9FzaSTLIvjpxhNe9mQj2bfoqA&s"},
+{name:"Franz Beckenbauer", img:"https://campeonsports.com/cdn/shop/files/rn-image_picker_lib_temp_e91f1749-f65a-48d1-9c59-a05639414de4.jpg?v=1765488226"},
+{name:"Gerd Müller", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRR3VMddTDYB4pniIPAWMmRPYhjVSlJi2rPsQ&s"},
+{name:"Kaka", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdFnI68y9rY4mj14aC3318gXykSzfDR6vZkw&s"},
+{name:"Andrea Pirlo", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpXHdVwOW0JcQR_vuxkoD9BKmY7sgAvesjGg&s"},
+{name:"Roberto Carlos", img:"https://m.media-amazon.com/images/I/41Ii+81GA3L.jpg"},
+{name:"Ronaldinho", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHB_0JhOpb5aU67b4IKOefRD9VjvPWtER7OQ&s"},
+{name:"Lev Yashin", img:"https://m.media-amazon.com/images/I/51kO15IYIoL._AC_UF894,1000_QL80_.jpg"},
+{name:"Trent Alexander-Arnold", img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOnj_v8N2R3mA8297Ge_Bcqx0Nr8g-ldoAnw&s"}
 ];
 
 const grid = document.getElementById("grid");
@@ -81,7 +93,7 @@ function addToCart(name,image){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   cart.push({name,image});
   localStorage.setItem("cart", JSON.stringify(cart));
-  alert(name + " added 🛒");
+  alert(name + " added 🛒🔥");
 }
 </script>
 
