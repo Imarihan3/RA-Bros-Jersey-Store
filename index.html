@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>RA Bros 3D</title>
+<title>RA Bros 3D - Ultimate Glow</title>
 
 <style>
 body { margin:0; overflow:hidden; background:#87CEEB; font-family:sans-serif; touch-action:none; }
@@ -34,6 +34,7 @@ body { margin:0; overflow:hidden; background:#87CEEB; font-family:sans-serif; to
   font-weight:bold;
   display:none;
   z-index:2000;
+  box-shadow: 0 0 50px #ff0033;
 }
 
 #joystick-container {
@@ -140,22 +141,26 @@ function init3D() {
   renderer.setSize(innerWidth, innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-  const light = new THREE.DirectionalLight(0xffffff, 0.8);
-  light.position.set(10,20,10);
-  scene.add(light);
+  // Global Lighting
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.6);
+  sun.position.set(10,20,10);
+  scene.add(sun);
 
+  // Fast Loading Floor with Light Reception
   const loader = new THREE.TextureLoader();
-  const grass = loader.load("https://threejs.org/examples/textures/terrain/grasslight-big.jpg");
-  grass.wrapS = grass.wrapT = THREE.RepeatWrapping;
-  grass.repeat.set(20,20);
+  const grassTex = loader.load("https://threejs.org/examples/textures/terrain/grasslight-big.jpg");
+  grassTex.wrapS = grassTex.wrapT = THREE.RepeatWrapping;
+  grassTex.repeat.set(20,20);
+  
   const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(100,100),
-    new THREE.MeshStandardMaterial({ map: grass })
+    new THREE.MeshPhongMaterial({ map: grassTex, shininess: 10 })
   );
   floor.rotation.x = -Math.PI/2;
   scene.add(floor);
 
+  // Field Lines
   const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
   const yLine = 0.02;
   const centerLine = new THREE.Mesh(new THREE.PlaneGeometry(100,0.3), lineMat);
@@ -197,7 +202,7 @@ function init3D() {
 
   const player = new THREE.Mesh(
     new THREE.BoxGeometry(2,2,2),
-    new THREE.MeshStandardMaterial({color:0xffffff})
+    new THREE.MeshPhongMaterial({color:0xffffff})
   );
   player.position.y = 1;
   scene.add(player);
@@ -208,21 +213,21 @@ function init3D() {
     const group = new THREE.Group();
     group.position.set(x, 0, z);
 
-    // 💿 GENERATOR DISC
+    // Generator Disc
     const discGeo = new THREE.CylinderGeometry(3.5, 3.5, 0.4, 32);
-    const discMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.9, roughness: 0.1 });
+    const discMat = new THREE.MeshPhongMaterial({ color: 0x111111 });
     const disc = new THREE.Mesh(discGeo, discMat);
     disc.position.y = 0.2;
     group.add(disc);
 
-    const ringGeo = new THREE.TorusGeometry(3.2, 0.08, 16, 100);
+    const ringGeo = new THREE.TorusGeometry(3.2, 0.1, 16, 100);
     const ringMat = new THREE.MeshBasicMaterial({ color: color });
     const ring = new THREE.Mesh(ringGeo, ringMat);
     ring.rotation.x = Math.PI/2;
     ring.position.y = 0.41;
     group.add(ring);
 
-    // 💎 ULTRA-BRIGHT HOLOGRAM
+    // HOLOGRAM
     const holoGroup = new THREE.Group();
     holoGroup.position.y = 5;
 
@@ -230,32 +235,33 @@ function init3D() {
     
     // Wireframe
     const wireframe = new THREE.WireframeGeometry(geometry);
-    const lineMat = new THREE.LineBasicMaterial({ color: color, linewidth: 2 });
+    const lineMat = new THREE.LineBasicMaterial({ color: color, linewidth: 3 });
     const lineMesh = new THREE.LineSegments(wireframe, lineMat);
     holoGroup.add(lineMesh);
 
-    // Glowing Outer Shell
+    // CORE EMISSION
     const coreMat = new THREE.MeshStandardMaterial({
       color: color,
       transparent: true,
-      opacity: 0.5,
+      opacity: 0.8,
       emissive: color,
-      emissiveIntensity: 15 
+      emissiveIntensity: 100 
     });
     const coreMesh = new THREE.Mesh(geometry, coreMat);
     holoGroup.add(coreMesh);
 
-    // Blinding Inner Core (White)
-    const innerGeo = new THREE.IcosahedronGeometry(1.3, 0);
+    // White Core
+    const innerGeo = new THREE.IcosahedronGeometry(1.8, 0);
     const innerMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
     const innerCore = new THREE.Mesh(innerGeo, innerMat);
     holoGroup.add(innerCore);
 
     group.add(holoGroup);
 
-    // Light Glow
-    const pLight = new THREE.PointLight(color, 4, 15);
-    pLight.position.y = 5;
+    // ⚡ LIGHT HIT ON GRASS - Higher intensity, lower decay
+    const pLight = new THREE.PointLight(color, 80, 25); 
+    pLight.decay = 1.5; 
+    pLight.position.y = 4.5;
     group.add(pLight);
 
     group.userData = { url, label: document.getElementById(labelId), holoGroup };
@@ -263,9 +269,9 @@ function init3D() {
     stores.push(group);
   }
 
-  addStore(-20,-20,0xff0000,"https://imarihan3.github.io/RA-Bros-Jersey-Store/normaljerseys.html","l1");
-  addStore(0,-35,0x00ff00,"https://imarihan3.github.io/RA-Bros-Jersey-Store/lejerseys.html","l2");
-  addStore(20,-20,0x0000ff,"https://imarihan3.github.io/RA-Bros-Jersey-Store/customisablejerseys.html","l3");
+  addStore(-20,-20, 0xff0000, "https://imarihan3.github.io/RA-Bros-Jersey-Store/normaljerseys.html", "l1");
+  addStore(0,-35, 0x00ff00, "https://imarihan3.github.io/RA-Bros-Jersey-Store/lejerseys.html", "l2");
+  addStore(20,-20, 0x00ffff, "https://imarihan3.github.io/RA-Bros-Jersey-Store/customisablejerseys.html", "l3");
 
   const enterBtn = document.getElementById("enterBtn");
 
