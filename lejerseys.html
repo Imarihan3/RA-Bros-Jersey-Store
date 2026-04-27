@@ -1,107 +1,223 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>🔥 Limited Jerseys</title>
+<title>⚡ Cyber Vault Jerseys</title>
 
 <style>
-body { margin:0; font-family:Arial; background:#0f0f0f; color:white; }
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap');
+
+:root {
+  --bg: #020205;
+  --panel: rgba(15, 15, 25, 0.7);
+  --accent-red: #ff003c;
+  --accent-blue: #00d4ff;
+  --accent-purple: #9d00ff;
+  --accent-gold: #ffaa00;
+}
+
+body { 
+  margin: 0; 
+  font-family: 'Rajdhani', sans-serif; 
+  background: var(--bg); 
+  color: white; 
+  background-image: 
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+  background-size: 100% 2px, 3px 100%;
+}
 
 header {
-  text-align:center;
-  padding:20px;
-  background:#000;
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid #333;
+  backdrop-filter: blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  background: linear-gradient(to right, #fff, var(--accent-red), #fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 15px rgba(255, 0, 60, 0.5));
 }
 
 .grid {
-  display:flex;
-  gap:20px;
-  flex-wrap:wrap;
-  justify-content:center;
-  padding:40px;
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 80px 20px;
 }
 
+/* Base Card with Futuristic Border */
 .card {
-  background:#1a1a1a;
-  padding:15px;
-  border-radius:12px;
-  width:260px;
-  text-align:center;
-  box-shadow:0 0 15px rgba(255,0,80,0.4);
+  background: var(--panel);
+  padding: 25px;
+  border-radius: 0px; /* Sharp futuristic edges */
+  width: 280px;
+  text-align: center;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.5s ease;
+  clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10% );
+}
+
+/* Individual Auras for each card */
+.card:nth-child(1) { --aura: var(--accent-blue); }
+.card:nth-child(2) { --aura: var(--accent-red); }
+.card:nth-child(3) { --aura: var(--accent-purple); }
+.card:nth-child(4) { --aura: #fff; }
+.card:nth-child(5) { --aura: var(--accent-gold); }
+
+.card:hover {
+  transform: translateY(-15px) rotateX(10deg);
+  border-color: var(--aura);
+  box-shadow: 0 0 40px var(--aura);
 }
 
 .card img {
-  width:100%;
-  height:250px;
-  object-fit:cover;
-  border-radius:10px;
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  filter: contrast(1.1) brightness(0.9);
+  border-bottom: 2px solid var(--aura);
+}
+
+/* Scanning Line Animation */
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 2px;
+  background: var(--aura);
+  box-shadow: 0 0 15px var(--aura);
+  animation: scan 3s linear infinite;
+  opacity: 0;
+}
+.card:hover::after { opacity: 1; }
+
+@keyframes scan {
+  0% { top: 0%; }
+  100% { top: 100%; }
 }
 
 .badge {
-  background:#ff0033;
-  padding:5px 10px;
-  border-radius:6px;
-  font-size:12px;
+  display: inline-block;
+  background: black;
+  color: var(--aura);
+  border: 1px solid var(--aura);
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  text-shadow: 0 0 5px var(--aura);
 }
 
-.btn {
-  margin-top:10px;
-  padding:10px;
-  background:#ff0033;
-  border:none;
-  color:white;
-  cursor:pointer;
-  width:100%;
+.card p {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  margin: 20px 0;
+  color: #eee;
 }
+
+/* Futuristic Button */
+.btn {
+  padding: 12px;
+  background: transparent;
+  border: 1px solid var(--aura);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  background: var(--aura);
+  color: black;
+  box-shadow: 0 0 20px var(--aura);
+}
+
+header button {
+  margin-top: 20px;
+  background: transparent;
+  border: 1px solid #555;
+  color: #888;
+  padding: 10px 30px;
+  cursor: pointer;
+  clip-path: polygon(15% 0, 100% 0, 100% 70%, 85% 100%, 0 100%, 0 30%);
+}
+
+header button:hover {
+  border-color: white;
+  color: white;
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>🔥 Limited Drops</h1>
-<button onclick="location.href='cart.html'">🛒 Cart</button>
+  <h1>NEO-VAULT DROPS</h1>
+  <button onclick="location.href='cart.html'">ACCESS CART</button>
 </header>
 
 <div class="grid">
 
-<div class="card">
-<span class="badge">LIMITED</span>
-<img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey1.jpeg">
-<p>Phantom Blue Aura</p>
-<button class="btn" onclick="addToCart('Phantom Blue Aura','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey1.jpeg')">Add</button>
-</div>
+  <div class="card">
+    <span class="badge">AURA-LOCKED</span>
+    <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey1.jpeg">
+    <p>Phantom Blue Aura</p>
+    <button class="btn" onclick="addToCart('Phantom Blue Aura','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey1.jpeg')">DEPLOY</button>
+  </div>
 
-<div class="card">
-<span class="badge">RARE</span>
-<img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey2.jpeg">
-<p>Dragon Black Elite</p>
-<button class="btn" onclick="addToCart('Dragon Black Elite','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey2.jpeg')">Add</button>
-</div>
+  <div class="card">
+    <span class="badge">PROTOCOL-RARE</span>
+    <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey2.jpeg">
+    <p>Dragon Black Elite</p>
+    <button class="btn" onclick="addToCart('Dragon Black Elite','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey2.jpeg')">DEPLOY</button>
+  </div>
 
-<div class="card">
-<span class="badge">DROP</span>
-<img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey3.jpeg">
-<p>Pink Velocity</p>
-<button class="btn" onclick="addToCart('Pink Velocity','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey3.jpeg')">Add</button>
-</div>
+  <div class="card">
+    <span class="badge">NEON-DROP</span>
+    <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey3.jpeg">
+    <p>Pink Velocity</p>
+    <button class="btn" onclick="addToCart('Pink Velocity','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey3.jpeg')">DEPLOY</button>
+  </div>
 
-<div class="card">
-<span class="badge">LIMITED</span>
-<img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey4.jpeg">
-<p>Samurai White</p>
-<button class="btn" onclick="addToCart('Samurai White','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey4.jpeg')">Add</button>
-</div>
+  <div class="card">
+    <span class="badge">STORM-ELITE</span>
+    <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey4.jpeg">
+    <p>Samurai White</p>
+    <button class="btn" onclick="addToCart('Samurai White','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey4.jpeg')">DEPLOY</button>
+  </div>
 
-<div class="card">
-<span class="badge">RARE</span>
-<img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey5.jpeg">
-<p>Phoenix Storm</p>
-<button class="btn" onclick="addToCart('Phoenix Storm','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey5.jpeg')">Add</button>
-</div>
+  <div class="card">
+    <span class="badge">PHOENIX-MAX</span>
+    <img src="https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey5.jpeg">
+    <p>Phoenix Storm</p>
+    <button class="btn" onclick="addToCart('Phoenix Storm','https://imarihan3.github.io/RA-Bros-Jersey-Store/jersey5.jpeg')">DEPLOY</button>
+  </div>
 
 </div>
 
 <script>
+// No changes to logic - your cart system remains intact
 function addToCart(name,image){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   cart.push({name,image});
