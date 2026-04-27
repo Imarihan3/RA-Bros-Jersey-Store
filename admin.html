@@ -6,59 +6,57 @@
     <title>RA BROS | Admin HQ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #000; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(255,255,255,0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
-        .neon-border { border: 1px solid #ff0033; box-shadow: 0 0 15px rgba(255, 0, 51, 0.2); }
+        body { background: #0a0a0a; color: white; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; }
+        .neon-text { text-shadow: 0 0 10px #ff0033; }
+        /* Custom Scrollbar for a cleaner look */
+        #inventory-list::-webkit-scrollbar { width: 4px; }
+        #inventory-list::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
-<body class="p-6">
+<body class="p-4 md:p-10">
 
-    <div id="login-screen" class="fixed inset-0 flex items-center justify-center bg-[#050505] z-">
+    <div id="login-screen" class="fixed inset-0 flex items-center justify-center bg-black z-">
         <div class="text-center">
-            <h1 class="text-5xl font-black mb-2 italic tracking-tighter text-white">RA <span class="text-red-600">BROS</span> HQ</h1>
-            <p class="text-gray-500 mb-8 tracking-[0.3em] text-[10px]">ENCRYPTED TERMINAL</p>
-            <button id="loginBtn" class="bg-white text-black px-12 py-4 rounded-full font-black hover:bg-red-600 hover:text-white transition-all duration-300 transform active:scale-95">
-                IDENTITY VERIFICATION
+            <h1 class="text-4xl font-black mb-2 neon-text italic">RA BROS HQ</h1>
+            <p class="text-gray-500 mb-8 tracking-widest text-xs">AUTHORIZED ACCESS ONLY</p>
+            <button id="loginBtn" class="bg-white text-black px-10 py-4 rounded-full font-black hover:scale-105 transition active:scale-95">
+                VERIFY IDENTITY
             </button>
         </div>
     </div>
 
-    <div id="dashboard" class="hidden max-w-6xl mx-auto pt-10">
-        <div class="flex justify-between items-end mb-12 border-b border-white/10 pb-6">
-            <div>
-                <h2 class="text-3xl font-black italic uppercase">Vault <span class="text-red-600">Management</span></h2>
-                <p id="user-tag" class="text-blue-500 font-mono text-xs mt-1 tracking-widest"></p>
+    <div id="dashboard" class="hidden max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-10 border-b border-white/5 pb-6">
+            <h2 class="text-2xl font-black italic">COMMAND <span class="text-red-600">CENTER</span></h2>
+            <div class="text-right">
+                <p id="user-tag" class="text-blue-400 font-bold text-sm lowercase"></p>
+                <button onclick="location.reload()" class="text-[10px] text-gray-600 uppercase hover:text-white">Logout / Refresh</button>
             </div>
-            <button onclick="location.reload()" class="text-xs bg-white/5 px-4 py-2 rounded-full hover:bg-red-900/30 border border-white/10 transition">LOCK TERMINAL</button>
         </div>
 
-        <div class="grid lg:grid-cols-3 gap-10">
-            <div class="glass p-8 h-fit neon-border">
-                <h3 class="text-sm font-bold mb-6 text-gray-400 uppercase tracking-widest">Deploy New Item</h3>
+        <div class="grid lg:grid-cols-3 gap-8">
+            <div class="glass p-8 h-fit">
+                <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full"></span> ADD NEW DROP
+                </h3>
                 <div class="space-y-4">
-                    <div class="space-y-1">
-                        <label class="text-[10px] text-gray-500 ml-1">ITEM NAME</label>
-                        <input type="text" id="itemName" placeholder="e.g. Red Velocity" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-red-600 transition text-white">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[10px] text-gray-500 ml-1">COIN VALUE</label>
-                        <input type="number" id="itemPrice" placeholder="500" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-red-600 transition text-white">
-                    </div>
-                    <button id="submitBtn" class="w-full bg-red-600 py-4 rounded-xl font-black uppercase mt-4 hover:bg-red-500 shadow-lg shadow-red-900/20 transition-all">UPLOAD TO LIVE SERVER</button>
+                    <input type="text" id="itemName" placeholder="Item Name" class="w-full bg-black/40 border border-white/10 p-3 rounded-lg outline-none focus:border-blue-500 transition text-white">
+                    <input type="number" id="itemPrice" placeholder="Price (Coins)" class="w-full bg-black/40 border border-white/10 p-3 rounded-lg outline-none focus:border-blue-500 transition text-white">
+                    <button id="submitBtn" class="w-full bg-blue-600 py-4 rounded-lg font-black uppercase tracking-tighter hover:bg-blue-500 transition shadow-lg shadow-blue-900/20">PUSH TO VAULT</button>
                 </div>
             </div>
 
             <div class="lg:col-span-2 glass p-8">
-                <div class="flex justify-between items-center mb-8">
-                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">Live Database Feed</h3>
-                    <div class="flex items-center gap-3">
-                        <span id="item-count" class="text-[10px] font-mono bg-white/5 px-3 py-1 rounded-full border border-white/10 text-blue-400">0 DOCUMENTS</span>
-                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    </div>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold flex items-center gap-2 text-green-400">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> LIVE VAULT
+                    </h3>
+                    <span id="item-count" class="text-xs bg-white/10 px-2 py-1 rounded text-gray-400 font-mono">0 Items</span>
                 </div>
                 
-                <div id="inventory-list" class="space-y-3 max-h-[600px] overflow-y-auto pr-4 custom-scrollbar">
-                    <p class="text-gray-700 animate-pulse">Waiting for handshake...</p>
+                <div id="inventory-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                    <p class="text-gray-600 italic">Waiting for connection...</p>
                 </div>
             </div>
         </div>
@@ -68,96 +66,97 @@
         import { db, login, addNewItem } from "./firebase.js";
         import { collection, onSnapshot, query, orderBy, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        // THE ONLY EMAIL ALLOWED
-        const ADMIN_EMAIL = "arihan.16jan@gmail.com";
+        const adminEmail = "arihan.16jan@gmail.com";
 
-        const loginBtn = document.getElementById('loginBtn');
-        const loginScreen = document.getElementById('login-screen');
-        const dashboard = document.getElementById('dashboard');
-        const userTag = document.getElementById('user-tag');
-
-        // --- AUTHENTICATION GATE ---
-        loginBtn.onclick = async () => {
+        // Login Logic
+        document.getElementById('loginBtn').onclick = async () => {
+            console.log("Login clicked...");
             try {
                 const user = await login();
+                console.log("Authenticated as:", user.email);
                 
-                if (user.email === ADMIN_EMAIL) {
-                    // SUCCESS: Reveal the dashboard
-                    loginScreen.classList.add('hidden');
-                    dashboard.classList.remove('hidden');
-                    userTag.innerText = `CONNECTED AS: ${user.email.toUpperCase()}`;
-                    initLiveInventory();
+                if (user.email === adminEmail) {
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    document.getElementById('user-tag').innerText = user.email;
+                    startLiveFeed();
                 } else {
-                    // FAIL: Kick them out
-                    alert("UNAUTHORIZED ACCESS: This incident will be reported.");
-                    window.location.href = "index.html"; // Redirect to game
+                    alert("Unauthorized access denied.");
                 }
             } catch (err) {
-                console.error("Auth Failure:", err);
+                console.error("Login failed:", err);
             }
         };
 
-        // --- UPLOAD LOGIC ---
+        // Save Logic
         document.getElementById('submitBtn').onclick = async () => {
-            const nameField = document.getElementById('itemName');
-            const priceField = document.getElementById('itemPrice');
+            const name = document.getElementById('itemName').value.trim();
+            const price = document.getElementById('itemPrice').value;
 
-            if (!nameField.value || !priceField.value) {
-                alert("Missing Parameters.");
+            if (!name || !price) {
+                alert("Missing name or price!");
                 return;
             }
 
+            console.log("Saving to Firebase...");
             try {
                 await addNewItem("jerseys", {
-                    name: nameField.value.trim(),
-                    price: Number(priceField.value),
+                    name: name,
+                    price: Number(price),
                     timestamp: serverTimestamp()
                 });
-                nameField.value = "";
-                priceField.value = "";
-            } catch (e) {
-                alert("Push Failed. Check Console.");
+                console.log("Saved successfully!");
+                document.getElementById('itemName').value = "";
+                document.getElementById('itemPrice').value = "";
+            } catch (error) {
+                console.error("Save error:", error);
             }
         };
 
-        // --- LIVE DATA FEED ---
-        function initLiveInventory() {
+        // Live Monitor Logic
+        function startLiveFeed() {
+            console.log("Connecting to live database feed...");
             const q = query(collection(db, "jerseys"), orderBy("timestamp", "desc"));
             
             onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('inventory-list');
-                document.getElementById('item-count').innerText = `${snapshot.size} DOCUMENTS`;
+                document.getElementById('item-count').innerText = `${snapshot.size} Items`;
                 list.innerHTML = "";
+
+                if (snapshot.empty) {
+                    list.innerHTML = `<p class="text-gray-600 italic text-center py-10">Vault is empty. Add your first item.</p>`;
+                    return;
+                }
 
                 snapshot.forEach((itemDoc) => {
                     const data = itemDoc.data();
-                    const div = document.createElement('div');
-                    div.className = "flex justify-between items-center p-5 bg-white/[0.03] rounded-2xl border border-white/5 hover:bg-white/[0.06] hover:border-red-600/30 transition-all group";
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = "flex justify-between items-center p-4 bg-white/[0.02] rounded-xl border border-white/5 hover:bg-white/[0.05] transition group";
                     
-                    div.innerHTML = `
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-red-600/10 rounded-full flex items-center justify-center text-red-500 font-black text-xs italic">RA</div>
-                            <div>
-                                <p class="font-bold text-white tracking-tight">${data.name}</p>
-                                <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-0.5">${data.price} Coins • ${itemDoc.id.substring(0,6)}</p>
-                            </div>
+                    itemDiv.innerHTML = `
+                        <div>
+                            <p class="font-bold text-white">${data.name}</p>
+                            <p class="text-[10px] text-gray-500 uppercase font-mono tracking-widest">${data.price} Coins</p>
                         </div>
-                        <button class="delete-btn opacity-0 group-hover:opacity-100 bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white px-4 py-2 rounded-lg text-[10px] font-black transition-all" data-id="${itemDoc.id}">
+                        <button class="delete-btn text-[10px] bg-red-600/10 text-red-500 px-3 py-1 rounded hover:bg-red-600 hover:text-white opacity-0 group-hover:opacity-100 transition duration-300" data-id="${itemDoc.id}">
                             DELETE
                         </button>
                     `;
-                    list.appendChild(div);
+                    list.appendChild(itemDiv);
                 });
 
-                // Attach Delete logic
+                // Re-bind delete buttons
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.onclick = async (e) => {
                         const id = e.target.getAttribute('data-id');
-                        if(confirm("Confirm deletion from server?")) {
+                        if(confirm("Permanently delete this from the server?")) {
                             await deleteDoc(doc(db, "jerseys", id));
                         }
                     };
                 });
+            }, (error) => {
+                console.error("Live feed error:", error);
+                document.getElementById('inventory-list').innerHTML = `<p class="text-red-500">Database connection failed. Check your Firestore Rules.</p>`;
             });
         }
     </script>
