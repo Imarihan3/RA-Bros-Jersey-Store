@@ -1,128 +1,285 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Your Cart</title>
+<title>Aether Inventory Vault</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Space+Grotesk:wght@300;500;700&display=swap');
+
+:root {
+  /* The Aether Palette: Futuristic Neon meets Paradise Blue */
+  --paradise-deep: #050a30;
+  --paradise-aqua: #00f2fe;
+  --paradise-pink: #4facfe;
+  
+  /* The Metallic Accents (Artistic/Futuristic Gold) */
+  --iridescent-gold: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+  --neon-gold: #ffcf00;
+  --neon-glow: rgba(255, 207, 0, 0.5);
+  
+  /* Futuristic "Frosted Glass" panel */
+  --glass: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+}
+
 body {
-  font-family:Arial;
-  background:linear-gradient(135deg,#0f0f0f,#1a1a1a);
-  color:white;
-  margin:0;
+  font-family: 'Space Grotesk', sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  color: #fff;
+  /* --- Background: The Cosmic Ocean (Artistic Paradise) --- */
+  background: 
+    linear-gradient(rgba(5, 10, 48, 0.7), rgba(0, 0, 0, 0.9)),
+    url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2000&auto=format&fit=crop'), /* Mountain/Star pattern */
+    radial-gradient(circle at center, var(--paradise-pink) 0%, var(--paradise-deep) 100%);
+  background-size: cover;
+  background-blend-mode: overlay;
+  background-attachment: fixed;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* --- Moving Aurora/Nebula Effect (Artistic Future) --- */
+body::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(0, 242, 254, 0.1) 0%, transparent 50%);
+  animation: auroraFlow 20s linear infinite alternate;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes auroraFlow {
+  0% { transform: translate(-10%, -10%) rotate(0deg); }
+  100% { transform: translate(10%, 10%) rotate(5deg); }
 }
 
 header {
-  text-align:center;
-  padding:20px;
-  background:#000;
-  box-shadow:0 0 10px rgba(255,0,80,0.3);
+  text-align: center;
+  padding: 80px 20px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+h1 {
+  font-family: 'Cinzel Decorative', cursive; /* Artistic/Traditional touch */
+  font-size: 2.8rem;
+  margin: 0;
+  letter-spacing: 12px;
+  text-transform: uppercase;
+  background: var(--iridescent-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 15px var(--neon-glow));
 }
 
 .cart-container {
-  max-width:800px;
-  margin:30px auto;
-  padding:20px;
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 50px;
+  /* --- The Glass Panel (Futuristic/Paradise) --- */
+  background: var(--glass);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Base futuristic "Scanning" line on the container */
+.cart-container::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 2px;
+  background: var(--paradise-aqua);
+  box-shadow: 0 0 15px var(--paradise-aqua);
+  animation: scanContainer 4s linear infinite;
+}
+
+@keyframes scanContainer {
+  0% { top: 0%; opacity: 0; }
+  50% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* --- Item Card styling (Glassmorphism & Neon) --- */
 .item {
-  display:flex;
-  align-items:center;
-  background:#1f1f1f;
-  padding:12px;
-  margin-bottom:15px;
-  border-radius:12px;
-  box-shadow:0 0 10px rgba(0,0,0,0.5);
-  transition:0.2s;
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 25px;
+  margin-bottom: 30px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
 }
 
 .item:hover {
-  transform:scale(1.02);
+  transform: translateY(-10px) rotateX(5deg);
+  background: rgba(0, 242, 254, 0.05); /* Paradise Blue highlight */
+  border-color: var(--paradise-aqua);
+  box-shadow: 0 15px 50px rgba(0, 242, 254, 0.2);
 }
 
 .item img {
-  width:80px;
-  height:80px;
-  object-fit:cover;
-  border-radius:10px;
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 0;
+  border: 1px solid #333;
+  padding: 5px;
+  transition: 0.3s;
+}
+
+.item:hover img {
+  border-color: var(--paradise-aqua);
+  box-shadow: 0 0 15px var(--paradise-aqua);
 }
 
 .info {
-  flex:1;
-  margin-left:15px;
-  text-align:left;
-  font-size:16px;
+  flex: 1;
+  margin-left: 30px;
+  text-align: left;
+  font-family: 'Cinzel Decorative', cursive; /* Traditional contrast */
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #fff;
+  text-shadow: 1px 1px 2px #000;
 }
 
+/* Remove Button (Futuristic/Minimalist) */
 .remove {
-  background:#ff0033;
-  color:white;
-  border:none;
-  padding:8px 12px;
-  border-radius:6px;
-  cursor:pointer;
+  background: transparent;
+  color: var(--paradise-aqua);
+  border: 1px solid var(--paradise-aqua);
+  padding: 10px 18px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.3s ease;
 }
 
 .remove:hover {
-  background:#ff1a4d;
+  background: var(--paradise-aqua);
+  color: #000;
+  box-shadow: 0 0 20px var(--paradise-aqua);
 }
 
 .empty {
-  text-align:center;
-  margin-top:50px;
-  color:#aaa;
-  font-size:18px;
+  text-align: center;
+  margin: 100px 0;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 300;
+  font-size: 1.8rem;
+  letter-spacing: 5px;
+  text-transform: uppercase;
 }
 
 .bottom-bar {
-  margin-top:20px;
-  text-align:center;
+  margin-top: 60px;
+  text-align: center;
+  padding-top: 50px;
+  border-top: 1px solid var(--glass-border);
 }
 
+/* --- Checkout Button: Holographic/Neon Gold --- */
 .checkout {
-  padding:14px 25px;
-  border:none;
-  border-radius:10px;
-  background:linear-gradient(45deg,#00c853,#00e676);
-  color:black;
-  font-weight:bold;
-  font-size:16px;
-  cursor:pointer;
-  transition:0.3s;
+  padding: 22px 60px;
+  border: 1px solid var(--neon-gold);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--neon-gold);
+  font-family: 'Cinzel Decorative', cursive;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: 0.5s;
 }
 
 .checkout:hover {
-  transform:scale(1.05);
+  background: var(--neon-gold);
+  color: black;
+  box-shadow: 0 0 50px var(--neon-glow);
+  letter-spacing: 10px;
+}
+
+/* Glowing "paradise" line effect on hover */
+.checkout::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+  transition: 0.5s;
+}
+
+.checkout:hover::after {
+  left: 100%;
 }
 
 .back {
-  margin-top:10px;
-  padding:10px 20px;
-  background:#444;
-  border:none;
-  border-radius:8px;
-  color:white;
-  cursor:pointer;
+  margin-top: 35px;
+  padding: 12px 25px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.3s;
 }
+
+.back:hover {
+  color: #fff;
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Scrollbar and Selection (Futuristic/Aether) */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--paradise-deep); }
+::-webkit-scrollbar-thumb { background: var(--paradise-pink); border-radius: 4px; }
+::selection { background: var(--paradise-aqua); color: black; }
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>🛒 Your Cart</h1>
+  <h1>AETHER VAULT</h1>
 </header>
 
 <div class="cart-container">
-<div id="cart"></div>
+  <div id="cart"></div>
 
-<div class="bottom-bar">
-<button class="checkout" onclick="checkout()">Proceed to Buy 💳</button>
-<br>
-<button class="back" onclick="history.back()">⬅ Back to Store</button>
-</div>
+  <div class="bottom-bar">
+    <button class="checkout" onclick="checkout()">COMMAND ORDER 💳</button>
+    <br>
+    <button class="back" onclick="history.back()">RETURN TO SHELL</button>
+  </div>
 </div>
 
 <script>
+// All logic remains consistent with your original functionality
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 const cartDiv = document.getElementById("cart");
 
@@ -130,7 +287,7 @@ function renderCart() {
   cartDiv.innerHTML = "";
 
   if (cart.length === 0) {
-    cartDiv.innerHTML = "<div class='empty'>Your cart is empty 😢</div>";
+    cartDiv.innerHTML = "<div class='empty'>THE ARCHIVE IS EMPTY</div>";
     return;
   }
 
@@ -139,7 +296,7 @@ function renderCart() {
       <div class="item">
         <img src="${item.image}">
         <div class="info">${item.name}</div>
-        <button class="remove" onclick="removeItem(${index})">Remove</button>
+        <button class="remove" onclick="removeItem(${index})">PRUNE</button>
       </div>
     `;
   });
@@ -154,7 +311,6 @@ window.removeItem = function(index) {
 renderCart();
 </script>
 
-<!-- FIREBASE CHECKOUT -->
 <script type="module">
 import { db, login } from "./firebase.js";
 import { addDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -163,7 +319,7 @@ window.checkout = async function() {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   if (cart.length === 0) {
-    alert("Cart empty ❌");
+    alert("The Archive is empty, Primal ❌");
     return;
   }
 
@@ -179,14 +335,14 @@ window.checkout = async function() {
       });
     }
 
-    alert("Order placed 🚀🔥");
+    alert("Order materialized in the Aether Archive 🚀🔥");
 
     localStorage.removeItem("cart");
     location.reload();
 
   } catch (e) {
     console.error(e);
-    alert("Error ❌");
+    alert("Materialization has failed ❌ Check console.");
   }
 };
 </script>
