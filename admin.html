@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RA BROS | HQ ADMIN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-red: #ff0033;
+            --neon-blue: #00f2fe;
+        }
+        body {
+            background: radial-gradient(circle at top right, #1a1a2e, #0f0f0f);
+            font-family: 'Inter', sans-serif;
+            color: white;
+            min-height: 100vh;
+        }
+        .header-font { font-family: 'Orbitron', sans-serif; }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
+        .neon-border-red { border-left: 4px solid var(--neon-red); }
+        .neon-border-blue { border-left: 4px solid var(--neon-blue); }
+        .glow-red { text-shadow: 0 0 10px var(--neon-red); }
+        input { background: rgba(0,0,0,0.3) !important; border: 1px solid #333 !important; color: white !important; }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+
+    <div id="denied-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black">
+        <div class="text-center">
+            <h1 class="header-font text-5xl font-black mb-2 glow-red uppercase italic">RA BROS HQ</h1>
+            <p class="text-gray-500 tracking-widest mb-10">AUTHORIZED PERSONNEL ONLY</p>
+            <button id="loginBtn" class="bg-white text-black px-10 py-4 rounded-full font-black hover:scale-105 transition-transform flex items-center gap-3 mx-auto">
+                <img src="https://www.google.com/favicon.ico" class="w-5"> SIGN IN AS ARIHAN
+            </button>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="hidden max-w-6xl mx-auto">
+        
+        <div class="flex justify-between items-end mb-10">
+            <div>
+                <h1 class="header-font text-3xl font-black italic tracking-tighter">RA BROS <span class="text-red-600">HQ</span></h1>
+                <p id="live-clock" class="text-xs text-gray-500 font-mono mt-1"></p>
+            </div>
+            <div class="text-right">
+                <p id="user-email" class="text-sm font-bold text-blue-400"></p>
+                <button onclick="logout()" class="text-[10px] uppercase tracking-widest text-gray-500 hover:text-red-500">Disconnect</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="glass p-6 neon-border-blue">
+                <p class="text-gray-500 text-xs uppercase font-bold tracking-widest">Active Players</p>
+                <h3 class="text-3xl font-black header-font mt-2">1,240</h3>
+            </div>
+            <div class="glass p-6 neon-border-red">
+                <p class="text-gray-500 text-xs uppercase font-bold tracking-widest">Vault Status</p>
+                <h3 class="text-3xl font-black header-font mt-2 text-red-500">ONLINE</h3>
+            </div>
+            <div class="glass p-6 border-l-4 border-yellow-500">
+                <p class="text-gray-500 text-xs uppercase font-bold tracking-widest">Limited Drops</p>
+                <h3 class="text-3xl font-black header-font mt-2">03</h3>
+            </div>
+            <div class="glass p-6 border-l-4 border-purple-500">
+                <p class="text-gray-500 text-xs uppercase font-bold tracking-widest">Reports</p>
+                <h3 class="text-3xl font-black header-font mt-2 text-gray-400">0</h3>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            
+            <div class="md:col-span-2 glass p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="header-font text-xl font-bold">VAULT INVENTORY</h2>
+                    <span class="text-xs bg-red-900/30 text-red-400 px-3 py-1 rounded-full border border-red-500/50">LIVE EDITING</span>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-black/40 rounded-xl border border-white/5">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center font-bold">N</div>
+                            <div>
+                                <h4 class="font-bold">Normal Jersey Vault</h4>
+                                <p class="text-xs text-gray-500">Current Items: 12</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="bg-white/10 hover:bg-white/20 p-2 px-4 rounded-lg text-xs transition">EDIT</button>
+                            <button class="bg-red-600/20 text-red-500 p-2 px-4 rounded-lg text-xs">DISABLE</button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 bg-black/40 rounded-xl border border-white/5">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center font-bold">L</div>
+                            <div>
+                                <h4 class="font-bold">Limited Edition Vault</h4>
+                                <p class="text-xs text-gray-500">Current Items: 2</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="bg-white/10 hover:bg-white/20 p-2 px-4 rounded-lg text-xs transition">EDIT</button>
+                            <button class="bg-blue-600 text-white p-2 px-4 rounded-lg text-xs font-bold">NEW DROP</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <div class="glass p-6">
+                    <h3 class="header-font font-bold mb-4">ARENA CONFIG</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] uppercase text-gray-500 font-bold">Stadium Message</label>
+                            <input type="text" placeholder="Welcome to RA BROS" class="w-full p-3 rounded-lg mt-1 outline-none">
+                        </div>
+                        <button class="w-full bg-red-600 py-3 rounded-lg font-bold text-sm glow-red">PUSH UPDATE</button>
+                    </div>
+                </div>
+
+                <div class="glass p-6 bg-blue-900/10 border-blue-500/20">
+                    <h3 class="header-font font-bold mb-2">SYSTEM</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Database: Firebase Firestore<br>Admin: arihan.16jan@gmail.com</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // CONFIG (Ensure this matches your main game)
+        const firebaseConfig = {
+            apiKey: "AIzaSy...",
+            authDomain: "your-app.firebaseapp.com",
+            projectId: "your-app",
+            storageBucket: "your-app.appspot.com",
+            messagingSenderId: "...",
+            appId: "..."
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        const adminEmail = "arihan.16jan@gmail.com";
+
+        // Clock logic
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('live-clock').innerText = "SYSTEM_TIME // " + now.toLocaleTimeString();
+        }, 1000);
+
+        // Login Logic
+        document.getElementById('loginBtn').onclick = () => {
+            signInWithPopup(auth, provider).catch(err => alert(err.message));
+        };
+
+        // Permission Verification
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.email === adminEmail) {
+                document.getElementById('denied-screen').style.display = 'none';
+                document.getElementById('admin-panel').classList.remove('hidden');
+                document.getElementById('user-email').innerText = user.email;
+            } else if (user) {
+                alert("Unauthorized User: Access Logged.");
+                signOut(auth);
+            }
+        });
+
+        window.logout = () => signOut(auth).then(() => location.reload());
+    </script>
+</body>
+</html>
