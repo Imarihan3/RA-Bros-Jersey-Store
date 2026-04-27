@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aether Inventory Vault</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Space+Grotesk:wght@300;500;700&display=swap');
@@ -12,6 +13,7 @@
             --paradise-pink: #4facfe;
             --neon-gold: #ffcf00; 
             --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         body {
@@ -30,10 +32,10 @@
 
         header { 
             text-align: center; 
-            padding: 60px; 
+            padding: 60px 20px; 
             width: 100%; 
             backdrop-filter: blur(20px); 
-            border-bottom: 1px solid rgba(255,255,255,0.1); 
+            border-bottom: 1px solid var(--glass-border); 
             box-sizing: border-box;
         }
 
@@ -43,18 +45,20 @@
             color: var(--neon-gold); 
             text-shadow: 0 0 15px rgba(255,207,0,0.5); 
             margin: 0;
+            text-transform: uppercase;
         }
 
         .cart-container { 
             width: 90%; 
             max-width: 800px; 
-            margin: 40px; 
+            margin: 40px auto; 
             padding: 40px; 
             background: var(--glass); 
             backdrop-filter: blur(25px); 
-            border: 1px solid rgba(255,255,255,0.1); 
+            border: 1px solid var(--glass-border); 
             border-radius: 4px; 
             box-sizing: border-box;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
         .item { 
@@ -64,12 +68,13 @@
             padding: 20px; 
             margin-bottom: 20px; 
             border-left: 3px solid var(--paradise-aqua); 
-            transition: 0.3s; 
+            transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1); 
         }
 
         .item:hover { 
-            transform: scale(1.02); 
+            transform: translateX(10px); 
             background: rgba(0,242,254,0.05); 
+            border-left: 3px solid var(--neon-gold);
         }
 
         .item img { 
@@ -84,53 +89,72 @@
             margin-left: 20px; 
             font-family: 'Cinzel Decorative', cursive; 
             font-size: 1.1rem; 
+            letter-spacing: 1px;
         }
 
         .remove { 
             background: transparent; 
             color: #ff4d4d; 
             border: 1px solid #ff4d4d; 
-            padding: 8px; 
+            padding: 8px 15px; 
             cursor: pointer; 
             font-family: 'Space Grotesk'; 
             font-size: 10px; 
             letter-spacing: 1px; 
+            text-transform: uppercase;
+            transition: 0.3s;
         }
 
         .remove:hover { 
             background: #ff4d4d; 
             color: #fff; 
+            box-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
+        }
+
+        .empty-msg {
+            text-align: center;
+            opacity: 0.5;
+            padding: 40px;
+            letter-spacing: 4px;
+            font-family: 'Cinzel Decorative', cursive;
         }
 
         .checkout { 
             width: 100%; 
-            padding: 20px; 
+            padding: 22px; 
             margin-top: 20px; 
             background: transparent; 
             border: 1px solid var(--neon-gold); 
             color: var(--neon-gold); 
             font-family: 'Cinzel Decorative'; 
             font-weight: 900; 
+            font-size: 1.1rem;
             letter-spacing: 5px; 
             cursor: pointer; 
             transition: 0.5s; 
+            text-transform: uppercase;
         }
 
         .checkout:hover { 
             background: var(--neon-gold); 
             color: #000; 
-            box-shadow: 0 0 30px var(--neon-gold); 
+            box-shadow: 0 0 40px var(--neon-glow); 
         }
 
         .back { 
-            margin-top: 20px; 
+            margin-top: 25px; 
             background: transparent; 
             border: none; 
-            color: #aaa; 
+            color: rgba(255,255,255,0.4); 
             cursor: pointer; 
             letter-spacing: 2px; 
             font-family: 'Space Grotesk';
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            transition: 0.3s;
         }
+
+        .back:hover { color: #fff; }
     </style>
 </head>
 <body>
@@ -146,16 +170,20 @@
 </div>
 
 <script>
-    // --- UI LOGIC ---
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     const cartDiv = document.getElementById("cart");
 
     function renderCart() {
-        cartDiv.innerHTML = cart.length === 0 ? "<div style='text-align:center; opacity:0.5; padding: 20px;'>ARCHIVE EMPTY</div>" : "";
+        if (cart.length === 0) {
+            cartDiv.innerHTML = "<div class='empty-msg'>THE ARCHIVE IS EMPTY</div>";
+            return;
+        }
+
+        cartDiv.innerHTML = "";
         cart.forEach((item, index) => {
             cartDiv.innerHTML += `
                 <div class="item">
-                    <img src="${item.image}">
+                    <img src="${item.image}" onerror="this.src='https://via.placeholder.com/80?text=Jersey'">
                     <div class="info">${item.name}</div>
                     <button class="remove" onclick="removeItem(${index})">PRUNE</button>
                 </div>`;
@@ -172,46 +200,56 @@
 </script>
 
 <script type="module">
-    // --- FIREBASE LOGIC ---
     import { db, login } from "./firebase.js";
     import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     window.checkout = async function() {
-        // Get fresh cart data from storage
         const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
         
         if (currentCart.length === 0) {
-            return alert("Archive is empty! ❌");
+            alert("The Vault is empty, Primal ❌");
+            return;
         }
 
         try {
-            // 1. Authenticate user
+            // 1. Authenticate with Google (Provides the 'Passport' for Security Rules)
             const user = await login();
-            if (!user) return;
+            
+            if (!user) {
+                alert("Materialization requires identity verification 🛡️");
+                return;
+            }
 
-            // 2. Map items to promises to save into 'orders' collection
+            console.log("Verified User:", user.email);
+
+            // 2. Upload to 'orders' collection (Matches your Firestore screenshot)
             const uploadPromises = currentCart.map(item => 
                 addDoc(collection(db, "orders"), {
                     email: user.email,
                     name: item.name,
                     image: item.image,
                     status: "materialized",
-                    time: serverTimestamp() // Official DB time format
+                    time: serverTimestamp() // Official Firebase time format
                 })
             );
 
-            // 3. Wait for ALL items to reach the database
+            // 3. Wait for all items to hit the database
             await Promise.all(uploadPromises);
 
             alert("Order secured in the Eternal Archive! 🚀🔥");
             
-            // 4. Clear cart and refresh
+            // 4. Clear storage and refresh
             localStorage.removeItem("cart");
             window.location.reload();
             
         } catch (e) {
-            console.error("Database Error:", e);
-            alert("System Error: " + e.message);
+            console.error("Critical Firebase Error:", e);
+            
+            if (e.code === 'permission-denied') {
+                alert("Security Shield Blocked Write: Update your Firebase Rules to allow 'request.auth != null'");
+            } else {
+                alert("Materialization Failed: " + e.message);
+            }
         }
     };
 </script>
