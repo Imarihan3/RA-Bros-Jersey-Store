@@ -7,17 +7,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Space+Grotesk:wght@300;500;700&display=swap');
 
 :root {
-  /* The Aether Palette: Futuristic Neon meets Paradise Blue */
   --paradise-deep: #050a30;
   --paradise-aqua: #00f2fe;
   --paradise-pink: #4facfe;
-  
-  /* The Metallic Accents (Artistic/Futuristic Gold) */
   --iridescent-gold: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
   --neon-gold: #ffcf00;
   --neon-glow: rgba(255, 207, 0, 0.5);
-  
-  /* Futuristic "Frosted Glass" panel */
   --glass: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.08);
 }
@@ -27,10 +22,9 @@ body {
   margin: 0;
   min-height: 100vh;
   color: #fff;
-  /* --- Background: The Cosmic Ocean (Artistic Paradise) --- */
   background: 
     linear-gradient(rgba(5, 10, 48, 0.7), rgba(0, 0, 0, 0.9)),
-    url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2000&auto=format&fit=crop'), /* Mountain/Star pattern */
+    url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2000&auto=format&fit=crop'),
     radial-gradient(circle at center, var(--paradise-pink) 0%, var(--paradise-deep) 100%);
   background-size: cover;
   background-blend-mode: overlay;
@@ -39,14 +33,10 @@ body {
   position: relative;
 }
 
-/* --- Moving Aurora/Nebula Effect (Artistic Future) --- */
 body::before {
   content: "";
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  top: -50%; left: -50%; width: 200%; height: 200%;
   background: radial-gradient(circle at center, rgba(0, 242, 254, 0.1) 0%, transparent 50%);
   animation: auroraFlow 20s linear infinite alternate;
   pointer-events: none;
@@ -60,7 +50,7 @@ body::before {
 
 header {
   text-align: center;
-  padding: 80px 20px;
+  padding: 60px 20px;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--glass-border);
@@ -70,7 +60,7 @@ header {
 }
 
 h1 {
-  font-family: 'Cinzel Decorative', cursive; /* Artistic/Traditional touch */
+  font-family: 'Cinzel Decorative', cursive;
   font-size: 2.8rem;
   margin: 0;
   letter-spacing: 12px;
@@ -83,182 +73,104 @@ h1 {
 
 .cart-container {
   max-width: 900px;
-  margin: 80px auto;
+  margin: 50px auto;
   padding: 50px;
-  /* --- The Glass Panel (Futuristic/Paradise) --- */
   background: var(--glass);
   backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
   border: 1px solid var(--glass-border);
   border-radius: 4px;
   position: relative;
-  overflow: hidden;
+  min-height: 300px;
 }
 
-/* Base futuristic "Scanning" line on the container */
-.cart-container::after {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 2px;
-  background: var(--paradise-aqua);
-  box-shadow: 0 0 15px var(--paradise-aqua);
-  animation: scanContainer 4s linear infinite;
-}
-
-@keyframes scanContainer {
-  0% { top: 0%; opacity: 0; }
-  50% { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
-}
-
-/* --- Item Card styling (Glassmorphism & Neon) --- */
 .item {
   display: flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.4);
   padding: 25px;
   margin-bottom: 30px;
   border-radius: 4px;
   border: 1px solid transparent;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
+  transition: 0.4s;
 }
 
 .item:hover {
-  transform: translateY(-10px) rotateX(5deg);
-  background: rgba(0, 242, 254, 0.05); /* Paradise Blue highlight */
+  transform: translateX(10px);
   border-color: var(--paradise-aqua);
-  box-shadow: 0 15px 50px rgba(0, 242, 254, 0.2);
+  box-shadow: 0 0 30px rgba(0, 242, 254, 0.1);
 }
 
 .item img {
-  width: 110px;
-  height: 110px;
+  width: 90px;
+  height: 90px;
   object-fit: cover;
-  border-radius: 0;
-  border: 1px solid #333;
-  padding: 5px;
-  transition: 0.3s;
-}
-
-.item:hover img {
-  border-color: var(--paradise-aqua);
-  box-shadow: 0 0 15px var(--paradise-aqua);
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 .info {
   flex: 1;
-  margin-left: 30px;
-  text-align: left;
-  font-family: 'Cinzel Decorative', cursive; /* Traditional contrast */
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: #fff;
-  text-shadow: 1px 1px 2px #000;
+  margin-left: 25px;
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: 18px;
 }
 
-/* Remove Button (Futuristic/Minimalist) */
 .remove {
   background: transparent;
-  color: var(--paradise-aqua);
-  border: 1px solid var(--paradise-aqua);
-  padding: 10px 18px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  color: #ff4d4d;
+  border: 1px solid #ff4d4d;
+  padding: 8px 15px;
   cursor: pointer;
-  transition: 0.3s ease;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
 }
 
 .remove:hover {
-  background: var(--paradise-aqua);
-  color: #000;
-  box-shadow: 0 0 20px var(--paradise-aqua);
+  background: #ff4d4d;
+  color: white;
 }
 
 .empty {
   text-align: center;
-  margin: 100px 0;
-  color: rgba(255, 255, 255, 0.3);
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 300;
-  font-size: 1.8rem;
-  letter-spacing: 5px;
-  text-transform: uppercase;
+  padding: 100px 0;
+  opacity: 0.5;
+  letter-spacing: 4px;
 }
 
 .bottom-bar {
-  margin-top: 60px;
+  margin-top: 40px;
   text-align: center;
-  padding-top: 50px;
   border-top: 1px solid var(--glass-border);
+  padding-top: 40px;
 }
 
-/* --- Checkout Button: Holographic/Neon Gold --- */
 .checkout {
-  padding: 22px 60px;
+  padding: 20px 60px;
   border: 1px solid var(--neon-gold);
-  border-radius: 2px;
   background: transparent;
   color: var(--neon-gold);
   font-family: 'Cinzel Decorative', cursive;
   font-weight: 900;
   font-size: 18px;
-  letter-spacing: 6px;
+  letter-spacing: 5px;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
   transition: 0.5s;
 }
 
 .checkout:hover {
   background: var(--neon-gold);
   color: black;
-  box-shadow: 0 0 50px var(--neon-glow);
-  letter-spacing: 10px;
-}
-
-/* Glowing "paradise" line effect on hover */
-.checkout::after {
-  content: "";
-  position: absolute;
-  top: 0; left: -100%; width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-  transition: 0.5s;
-}
-
-.checkout:hover::after {
-  left: 100%;
+  box-shadow: 0 0 40px var(--neon-glow);
 }
 
 .back {
-  margin-top: 35px;
-  padding: 12px 25px;
+  margin-top: 20px;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.4);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
+  border: none;
+  color: rgba(255,255,255,0.4);
   cursor: pointer;
-  transition: 0.3s;
+  letter-spacing: 2px;
 }
-
-.back:hover {
-  color: #fff;
-  border-color: #fff;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* Scrollbar and Selection (Futuristic/Aether) */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--paradise-deep); }
-::-webkit-scrollbar-thumb { background: var(--paradise-pink); border-radius: 4px; }
-::selection { background: var(--paradise-aqua); color: black; }
 </style>
 </head>
 
@@ -279,13 +191,12 @@ h1 {
 </div>
 
 <script>
-// All logic remains consistent with your original functionality
+// Logic to display the cart
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 const cartDiv = document.getElementById("cart");
 
 function renderCart() {
   cartDiv.innerHTML = "";
-
   if (cart.length === 0) {
     cartDiv.innerHTML = "<div class='empty'>THE ARCHIVE IS EMPTY</div>";
     return;
@@ -315,34 +226,43 @@ renderCart();
 import { db, login } from "./firebase.js";
 import { addDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// We attach the function to the 'window' so the HTML button can find it
 window.checkout = async function() {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  if (cart.length === 0) {
+  if (currentCart.length === 0) {
     alert("The Archive is empty, Primal ❌");
     return;
   }
 
   try {
+    // 1. Trigger the Google Login from firebase.js
     const user = await login();
 
-    for (let item of cart) {
+    if (!user) {
+      alert("Authentication Failed ❌");
+      return;
+    }
+
+    // 2. Upload each item to Firestore
+    for (let item of currentCart) {
       await addDoc(collection(db, "orders"), {
         email: user.email,
         name: item.name,
         image: item.image,
-        time: new Date()
+        timestamp: new Date() // Changed to 'timestamp' for better sorting later
       });
     }
 
     alert("Order materialized in the Aether Archive 🚀🔥");
 
+    // 3. Clear local storage and refresh
     localStorage.removeItem("cart");
     location.reload();
 
   } catch (e) {
-    console.error(e);
-    alert("Materialization has failed ❌ Check console.");
+    console.error("Firebase Error:", e);
+    alert("Materialization failed. Ensure Firebase rules are set to public/auth.");
   }
 };
 </script>
