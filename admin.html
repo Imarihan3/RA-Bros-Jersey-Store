@@ -42,12 +42,10 @@ body {
 <script type="module">
 import { db, auth, login } from "./firebase.js";
 import { collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const ADMIN_EMAIL = "arihan.16jan@gmail.com";
 const container = document.getElementById("orders");
 
-// 🔐 FORCE LOGIN
 async function init() {
   let user = auth.currentUser;
 
@@ -55,7 +53,6 @@ async function init() {
     user = await login();
   }
 
-  // ❌ BLOCK IF NOT YOU
   if (user.email !== ADMIN_EMAIL) {
     document.body.innerHTML = "<h2>⛔ Access Denied</h2>";
     return;
@@ -64,31 +61,46 @@ async function init() {
   loadOrders();
 }
 
-// 📦 LOAD ORDERS
 function loadOrders() {
   const q = query(collection(db, "orders"), orderBy("time", "desc"));
 
   onSnapshot(q, (snapshot) => {
     container.innerHTML = "";
 
+    if (snapshot.empty) {
+      container.innerHTML = "<p>No orders yet 😴</p>";
+      return;
+    }
+
     snapshot.forEach(doc => {
       const data = doc.data();
 
       let html = `
         <div class="order">
-          <h3>👤 ${data.email}</h3>
-          <p>Status: ${data.status}</p>
+          <h3>👤 ${data.email || "Unknown"}</h3>
+          <p>Status: ${data.status || "pending"}</p>
       `;
 
+      // ✅ NEW STRUCTURE (MULTIPLE ITEMS)
       if (data.items && Array.isArray(data.items)) {
         data.items.forEach(item => {
           html += `
             <div class="item">
-              <img src="${item.image}" onerror="this.src='https://via.placeholder.com/60'">
-              <span>${item.name}</span>
+              <img src="${item.image || 'https://via.placeholder.com/60'}">
+              <span>${item.name || "Unnamed Item"}</span>
             </div>
           `;
         });
+      }
+
+      // ⚠️ OLD STRUCTURE SUPPORT (BACKUP FIX)
+      else if (data.name) {
+        html += `
+          <div class="item">
+            <img src="${data.image || 'https://via.placeholder.com/60'}">
+            <span>${data.name}</span>
+          </div>
+        `;
       }
 
       html += `</div>`;
