@@ -4,105 +4,212 @@
 <title>Admin Orders | RA Bros</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+:root {
+  --primary: #00d4ff;
+  --accent: #7000ff;
+  --danger: #ff003c;
+  --bg-dark: #080808;
+}
 
 body {
   font-family: 'Outfit', sans-serif;
-  background: radial-gradient(circle at top right, #1a1a1a, #050505);
-  color: #e0e0e0;
-  padding: 40px;
+  background-color: var(--bg-dark);
+  color: #ffffff;
   margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+/* --- ANIMATED MESH BACKGROUND --- */
+.bg-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: radial-gradient(circle at 0% 0%, #101010 0%, #050505 100%);
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: var(--primary);
+  filter: blur(80px);
+  border-radius: 50%;
+  opacity: 0.15;
+  animation: move 20s infinite alternate;
+}
+
+.blob.two {
+  background: var(--accent);
+  width: 600px;
+  height: 600px;
+  right: -100px;
+  top: -100px;
+  animation-duration: 25s;
+  opacity: 0.1;
+}
+
+@keyframes move {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(100px, 100px) scale(1.2); }
+}
+
+/* --- LAYOUT --- */
+.content-container {
+  width: 90%;
+  max-width: 850px;
+  padding: 60px 20px;
 }
 
 h1 {
-  font-size: 2.2rem;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
 }
 
+/* --- BUTTONS --- */
 button {
-  padding:8px 14px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
+  font-family: 'Outfit', sans-serif;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
 }
 
-/* DELETE ALL BUTTON */
 .deleteAll {
-  background:#ff003c;
-  color:white;
-  font-weight:bold;
-}
-.deleteAll:hover {
-  background:#ff335c;
+  background: var(--danger);
+  color: white;
+  box-shadow: 0 0 20px rgba(255, 0, 60, 0.2);
 }
 
-/* ORDER CARD */
+.deleteAll:hover {
+  background: #ff2b5e;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(255, 0, 60, 0.4);
+}
+
+/* --- ORDER CARD --- */
 .order {
-  border:1px solid rgba(255,255,255,0.1);
-  padding:20px;
-  margin-bottom:20px;
-  border-radius:15px;
-  background:rgba(255,255,255,0.03);
-  backdrop-filter:blur(10px);
-  transition:0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 30px;
+  margin-bottom: 30px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: 0.4s;
 }
 
 .order:hover {
-  transform:translateY(-5px);
-  border-color:#ff003c;
+  transform: scale(1.01);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(0, 212, 255, 0.3);
 }
 
 .order h3 {
-  color:#00d4ff;
-  font-size:1rem;
+  color: var(--primary);
+  font-size: 1.3rem;
+  margin: 0 0 8px 0;
 }
 
-/* ITEMS */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+/* --- ITEM LIST --- */
 .item {
-  display:flex;
-  align-items:center;
-  margin:10px 0;
-  padding:8px;
-  background:rgba(0,0,0,0.3);
-  border-radius:10px;
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 18px;
 }
 
 .item img {
-  width:60px;
-  height:60px;
-  object-fit:cover;
-  border-radius:8px;
-  margin-right:10px;
+  width: 65px;
+  height: 65px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-right: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-/* DELETE ONE */
-.deleteOne {
-  margin-top:10px;
-  background:#ff4444;
-  color:white;
+.item span {
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: #eee;
 }
+
+/* --- DELETE ONE --- */
+.deleteOne {
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ff8e8e;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 .deleteOne:hover {
-  background:#ff6666;
+  background: rgba(255, 0, 60, 0.1);
+  color: #ff003c;
+  border-color: rgba(255, 0, 60, 0.2);
 }
 
 .denied {
-  text-align:center;
-  margin-top:100px;
-  color:#ff003c;
+  text-align: center;
+  margin-top: 20vh;
+}
+
+.denied h2 {
+  font-size: 3rem;
+  color: var(--danger);
+  text-shadow: 0 0 30px rgba(255, 0, 60, 0.5);
 }
 </style>
 </head>
 
 <body>
 
-<h1>
-  📦 Admin Orders
-  <button class="deleteAll" onclick="deleteAllOrders()">🧨 Delete All</button>
-</h1>
+<div class="bg-wrapper">
+  <div class="blob"></div>
+  <div class="blob two"></div>
+</div>
 
-<div id="orders">🔐 Authenticating...</div>
+<div class="content-container">
+  <h1>
+    <span>📦 Admin Orders</span>
+    <button class="deleteAll" onclick="deleteAllOrders()">🧨 Delete All</button>
+  </h1>
+
+  <div id="orders">🔐 Authenticating...</div>
+</div>
 
 <script type="module">
 import { db, auth, login } from "./firebase.js";
@@ -140,7 +247,7 @@ function loadOrders() {
     container.innerHTML = "";
 
     if (snapshot.empty) {
-      container.innerHTML = "<p>No orders yet 😴</p>";
+      container.innerHTML = "<p style='text-align:center; opacity:0.5;'>No orders yet 😴</p>";
       return;
     }
 
@@ -151,10 +258,9 @@ function loadOrders() {
       let html = `
         <div class="order">
           <h3>👤 ${data.email || "Unknown User"}</h3>
-          <p>Status: ${data.status || "pending"}</p>
+          <div class="status-badge">${(data.status || "pending").toUpperCase()}</div>
       `;
 
-      /* ✅ NEW FORMAT (MULTIPLE ITEMS) */
       if (data.items && Array.isArray(data.items)) {
         data.items.forEach(item => {
           html += `
@@ -166,8 +272,6 @@ function loadOrders() {
           `;
         });
       }
-
-      /* ⚠️ OLD FORMAT SUPPORT */
       else if (data.name) {
         html += `
           <div class="item">
@@ -179,7 +283,7 @@ function loadOrders() {
       }
 
       html += `
-        <button class="deleteOne" onclick="deleteOrder('${id}')">Delete</button>
+        <button class="deleteOne" onclick="deleteOrder('${id}')">Delete Order</button>
         </div>
       `;
 
@@ -188,13 +292,11 @@ function loadOrders() {
   });
 }
 
-/* 🗑️ DELETE SINGLE ORDER */
 window.deleteOrder = async function(id) {
   if (!confirm("Delete this order?")) return;
   await deleteDoc(doc(db, "orders", id));
 };
 
-/* 💣 DELETE ALL ORDERS */
 window.deleteAllOrders = async function() {
   if (!confirm("⚠️ DELETE ALL ORDERS?\nNo undo.")) return;
 
@@ -205,7 +307,6 @@ window.deleteAllOrders = async function() {
   );
 
   await Promise.all(promises);
-
   alert("All orders deleted 💀");
 };
 
