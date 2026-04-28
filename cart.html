@@ -50,12 +50,12 @@ renderCart();
 
 <script type="module">
 import { db, login } from "./firebase.js";
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-window.checkout = async function(){
+window.checkout = async function() {
   const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  if(currentCart.length === 0){
+  if (currentCart.length === 0) {
     alert("Cart empty ❌");
     return;
   }
@@ -65,19 +65,19 @@ window.checkout = async function(){
 
     await addDoc(collection(db, "orders"), {
       email: user.email,
-      items: currentCart, // 🔥 FULL CART
-      status: "placed",
+      items: currentCart, // ✅ FIXED (GROUPED)
+      status: "pending",
       time: serverTimestamp()
     });
 
-    alert("Order placed ✅🔥");
+    alert("Order placed 🚀🔥");
 
     localStorage.removeItem("cart");
     location.reload();
 
-  } catch(e){
+  } catch (e) {
     console.error(e);
-    alert("Firebase error ❌");
+    alert("Error placing order ❌");
   }
 };
 </script>
