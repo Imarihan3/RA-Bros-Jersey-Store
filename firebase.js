@@ -1,6 +1,7 @@
+// firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD6Kn1k949hm8D8KG-0ClVLuBkacJB6c08",
@@ -8,7 +9,7 @@ const firebaseConfig = {
   projectId: "ra-bros",
   storageBucket: "ra-bros.appspot.com",
   messagingSenderId: "389146527012",
-  appId: "1:389146527012:web:6e18f2f5c7e1f40d" 
+  appId: "1:389146527012:web:6e18f2f5c7e1f40d"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -17,13 +18,8 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 export async function login() {
-  try {
-    const result = await signInWithPopup(auth, provider);
-    return result.user;
-  } catch (error) {
-    console.error("Login Error:", error);
-    throw error;
-  }
+  const result = await signInWithPopup(auth, provider);
+  return result.user;
 }
 
-export { db, auth, collection, addDoc, query, where, onSnapshot, serverTimestamp };
+export { db, auth };
