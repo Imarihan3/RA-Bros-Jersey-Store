@@ -1,257 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aether Inventory Vault</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Space+Grotesk:wght@300;500;700&display=swap');
-        
-        :root {
-            --paradise-deep: #050a30; 
-            --paradise-aqua: #00f2fe; 
-            --paradise-pink: #4facfe;
-            --neon-gold: #ffcf00; 
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        body {
-            font-family: 'Space Grotesk', sans-serif; 
-            margin: 0; 
-            min-height: 100vh; 
-            color: #fff;
-            background: linear-gradient(rgba(5, 10, 48, 0.7), rgba(0, 0, 0, 0.9)), 
-                        url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2000&auto=format&fit=crop');
-            background-size: cover; 
-            background-attachment: fixed; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-        }
-
-        header { 
-            text-align: center; 
-            padding: 60px 20px; 
-            width: 100%; 
-            backdrop-filter: blur(20px); 
-            border-bottom: 1px solid var(--glass-border); 
-            box-sizing: border-box;
-        }
-
-        h1 { 
-            font-family: 'Cinzel Decorative', cursive; 
-            letter-spacing: 12px; 
-            color: var(--neon-gold); 
-            text-shadow: 0 0 15px rgba(255,207,0,0.5); 
-            margin: 0;
-            text-transform: uppercase;
-        }
-
-        .cart-container { 
-            width: 90%; 
-            max-width: 800px; 
-            margin: 40px auto; 
-            padding: 40px; 
-            background: var(--glass); 
-            backdrop-filter: blur(25px); 
-            border: 1px solid var(--glass-border); 
-            border-radius: 4px; 
-            box-sizing: border-box;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        .item { 
-            display: flex; 
-            align-items: center; 
-            background: rgba(0,0,0,0.4); 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            border-left: 3px solid var(--paradise-aqua); 
-            transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1); 
-        }
-
-        .item:hover { 
-            transform: translateX(10px); 
-            background: rgba(0,242,254,0.05); 
-            border-left: 3px solid var(--neon-gold);
-        }
-
-        .item img { 
-            width: 80px; 
-            height: 80px; 
-            object-fit: cover; 
-            border: 1px solid #333; 
-        }
-
-        .info { 
-            flex: 1; 
-            margin-left: 20px; 
-            font-family: 'Cinzel Decorative', cursive; 
-            font-size: 1.1rem; 
-            letter-spacing: 1px;
-        }
-
-        .remove { 
-            background: transparent; 
-            color: #ff4d4d; 
-            border: 1px solid #ff4d4d; 
-            padding: 8px 15px; 
-            cursor: pointer; 
-            font-family: 'Space Grotesk'; 
-            font-size: 10px; 
-            letter-spacing: 1px; 
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-
-        .remove:hover { 
-            background: #ff4d4d; 
-            color: #fff; 
-            box-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
-        }
-
-        .empty-msg {
-            text-align: center;
-            opacity: 0.5;
-            padding: 40px;
-            letter-spacing: 4px;
-            font-family: 'Cinzel Decorative', cursive;
-        }
-
-        .checkout { 
-            width: 100%; 
-            padding: 22px; 
-            margin-top: 20px; 
-            background: transparent; 
-            border: 1px solid var(--neon-gold); 
-            color: var(--neon-gold); 
-            font-family: 'Cinzel Decorative'; 
-            font-weight: 900; 
-            font-size: 1.1rem;
-            letter-spacing: 5px; 
-            cursor: pointer; 
-            transition: 0.5s; 
-            text-transform: uppercase;
-        }
-
-        .checkout:hover { 
-            background: var(--neon-gold); 
-            color: #000; 
-            box-shadow: 0 0 40px var(--neon-glow); 
-        }
-
-        .back { 
-            margin-top: 25px; 
-            background: transparent; 
-            border: none; 
-            color: rgba(255,255,255,0.4); 
-            cursor: pointer; 
-            letter-spacing: 2px; 
-            font-family: 'Space Grotesk';
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            transition: 0.3s;
-        }
-
-        .back:hover { color: #fff; }
-    </style>
+<title>Cart</title>
+<style>
+body { font-family:Arial; background:#111; color:white; padding:20px; }
+.item { display:flex; margin:10px 0; }
+img { width:60px; height:60px; margin-right:10px; }
+button { margin-top:10px; padding:10px; cursor:pointer; }
+</style>
 </head>
+
 <body>
 
-<header>
-    <h1>AETHER VAULT</h1>
-</header>
+<h1>🛒 Your Cart</h1>
 
-<div class="cart-container">
-    <div id="cart"></div>
-    <button class="checkout" onclick="checkout()">COMMAND ORDER 💳</button>
-    <center><button class="back" onclick="history.back()">RETURN TO SHELL</button></center>
-</div>
+<div id="cart"></div>
+<button onclick="checkout()">Checkout</button>
 
 <script>
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const cartDiv = document.getElementById("cart");
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+const cartDiv = document.getElementById("cart");
 
-    function renderCart() {
-        if (cart.length === 0) {
-            cartDiv.innerHTML = "<div class='empty-msg'>THE ARCHIVE IS EMPTY</div>";
-            return;
-        }
+function renderCart(){
+  if(cart.length === 0){
+    cartDiv.innerHTML = "Cart empty";
+    return;
+  }
 
-        cartDiv.innerHTML = "";
-        cart.forEach((item, index) => {
-            cartDiv.innerHTML += `
-                <div class="item">
-                    <img src="${item.image}" onerror="this.src='https://via.placeholder.com/80?text=Jersey'">
-                    <div class="info">${item.name}</div>
-                    <button class="remove" onclick="removeItem(${index})">PRUNE</button>
-                </div>`;
-        });
-    }
+  cartDiv.innerHTML = "";
+  cart.forEach((item,i)=>{
+    cartDiv.innerHTML += `
+      <div class="item">
+        <img src="${item.image}">
+        <span>${item.name}</span>
+        <button onclick="removeItem(${i})">❌</button>
+      </div>
+    `;
+  });
+}
 
-    window.removeItem = (index) => {
-        cart.splice(index, 1);
-        localStorage.setItem("cart", JSON.stringify(cart));
-        renderCart();
-    };
+function removeItem(i){
+  cart.splice(i,1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  renderCart();
+}
 
-    renderCart();
+renderCart();
 </script>
 
 <script type="module">
-    import { db, login } from "./firebase.js";
-    import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { db, login } from "./firebase.js";
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    window.checkout = async function() {
-        const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-        
-        if (currentCart.length === 0) {
-            alert("The Vault is empty, Primal ❌");
-            return;
-        }
+window.checkout = async function(){
+  const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        try {
-            // 1. Authenticate with Google (Provides the 'Passport' for Security Rules)
-            const user = await login();
-            
-            if (!user) {
-                alert("Materialization requires identity verification 🛡️");
-                return;
-            }
+  if(currentCart.length === 0){
+    alert("Cart empty ❌");
+    return;
+  }
 
-            console.log("Verified User:", user.email);
+  try {
+    const user = await login();
 
-            // 2. Upload to 'orders' collection (Matches your Firestore screenshot)
-            const uploadPromises = currentCart.map(item => 
-                addDoc(collection(db, "orders"), {
-                    email: user.email,
-                    name: item.name,
-                    image: item.image,
-                    status: "materialized",
-                    time: serverTimestamp() // Official Firebase time format
-                })
-            );
+    await addDoc(collection(db, "orders"), {
+      email: user.email,
+      items: currentCart, // 🔥 FULL CART
+      status: "placed",
+      time: serverTimestamp()
+    });
 
-            // 3. Wait for all items to hit the database
-            await Promise.all(uploadPromises);
+    alert("Order placed ✅🔥");
 
-            alert("Order secured in the Eternal Archive! 🚀🔥");
-            
-            // 4. Clear storage and refresh
-            localStorage.removeItem("cart");
-            window.location.reload();
-            
-        } catch (e) {
-            console.error("Critical Firebase Error:", e);
-            
-            if (e.code === 'permission-denied') {
-                alert("Security Shield Blocked Write: Update your Firebase Rules to allow 'request.auth != null'");
-            } else {
-                alert("Materialization Failed: " + e.message);
-            }
-        }
-    };
+    localStorage.removeItem("cart");
+    location.reload();
+
+  } catch(e){
+    console.error(e);
+    alert("Firebase error ❌");
+  }
+};
 </script>
 
 </body>
