@@ -4,62 +4,93 @@
 <title>Admin Orders | RA Bros</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap');
+
 body {
-  font-family: Arial;
-  background:#0f0f0f;
-  color:white;
-  padding:20px;
+  font-family: 'Outfit', sans-serif;
+  background: radial-gradient(circle at top right, #1a1a1a, #050505);
+  color: #e0e0e0;
+  padding: 40px;
+  margin: 0;
 }
 
 h1 {
+  font-size: 2.2rem;
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
 
 button {
-  padding:10px 15px;
-  cursor:pointer;
+  padding:8px 14px;
   border:none;
   border-radius:8px;
+  cursor:pointer;
 }
 
-/* 🔴 DELETE ALL BUTTON */
+/* DELETE ALL BUTTON */
 .deleteAll {
   background:#ff003c;
   color:white;
   font-weight:bold;
 }
-
 .deleteAll:hover {
   background:#ff335c;
 }
 
+/* ORDER CARD */
 .order {
-  border:1px solid #444;
-  padding:15px;
+  border:1px solid rgba(255,255,255,0.1);
+  padding:20px;
   margin-bottom:20px;
-  border-radius:10px;
-  background:#1a1a1a;
+  border-radius:15px;
+  background:rgba(255,255,255,0.03);
+  backdrop-filter:blur(10px);
+  transition:0.3s;
 }
 
+.order:hover {
+  transform:translateY(-5px);
+  border-color:#ff003c;
+}
+
+.order h3 {
+  color:#00d4ff;
+  font-size:1rem;
+}
+
+/* ITEMS */
 .item {
   display:flex;
   align-items:center;
   margin:10px 0;
+  padding:8px;
+  background:rgba(0,0,0,0.3);
+  border-radius:10px;
 }
 
 .item img {
   width:60px;
   height:60px;
   object-fit:cover;
+  border-radius:8px;
   margin-right:10px;
 }
 
+/* DELETE ONE */
 .deleteOne {
   margin-top:10px;
   background:#ff4444;
   color:white;
+}
+.deleteOne:hover {
+  background:#ff6666;
+}
+
+.denied {
+  text-align:center;
+  margin-top:100px;
+  color:#ff003c;
 }
 </style>
 </head>
@@ -68,19 +99,25 @@ button {
 
 <h1>
   📦 Admin Orders
-  <button class="deleteAll" onclick="deleteAllOrders()">🧨 DELETE ALL</button>
+  <button class="deleteAll" onclick="deleteAllOrders()">🧨 Delete All</button>
 </h1>
 
 <div id="orders">🔐 Authenticating...</div>
 
 <script type="module">
 import { db, auth, login } from "./firebase.js";
-import { collection, onSnapshot, query, orderBy, deleteDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  deleteDoc,
+  doc,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const ADMIN_EMAIL = "arihan.16jan@gmail.com";
 const container = document.getElementById("orders");
-
-let allDocs = []; // store refs for bulk delete
 
 async function init() {
   let user = auth.currentUser;
@@ -88,7 +125,8 @@ async function init() {
   if (!user) user = await login();
 
   if (user.email !== ADMIN_EMAIL) {
-    document.body.innerHTML = "<h2>⛔ Access Denied</h2>";
+    document.body.innerHTML =
+      "<div class='denied'><h2>⛔ ACCESS DENIED</h2></div>";
     return;
   }
 
@@ -100,10 +138,9 @@ function loadOrders() {
 
   onSnapshot(q, (snapshot) => {
     container.innerHTML = "";
-    allDocs = [];
 
-    if(snapshot.empty){
-      container.innerHTML = "<p>No orders 😴</p>";
+    if (snapshot.empty) {
+      container.innerHTML = "<p>No orders yet 😴</p>";
       return;
     }
 
@@ -111,23 +148,34 @@ function loadOrders() {
       const data = docSnap.data();
       const id = docSnap.id;
 
-      allDocs.push(id);
-
       let html = `
         <div class="order">
-          <h3>👤 ${data.email}</h3>
-          <p>Status: ${data.status}</p>
+          <h3>👤 ${data.email || "Unknown User"}</h3>
+          <p>Status: ${data.status || "pending"}</p>
       `;
 
-      if (data.items) {
+      /* ✅ NEW FORMAT (MULTIPLE ITEMS) */
+      if (data.items && Array.isArray(data.items)) {
         data.items.forEach(item => {
           html += `
             <div class="item">
-              <img src="${item.image}">
+              <img src="${item.image || 'https://via.placeholder.com/60'}"
+                   onerror="this.src='https://via.placeholder.com/60'">
               <span>${item.name}</span>
             </div>
           `;
         });
+      }
+
+      /* ⚠️ OLD FORMAT SUPPORT */
+      else if (data.name) {
+        html += `
+          <div class="item">
+            <img src="${data.image || 'https://via.placeholder.com/60'}"
+                 onerror="this.src='https://via.placeholder.com/60'">
+            <span>${data.name}</span>
+          </div>
+        `;
       }
 
       html += `
@@ -140,21 +188,20 @@ function loadOrders() {
   });
 }
 
-// 🗑️ DELETE ONE
-window.deleteOrder = async function(id){
-  if(!confirm("Delete this order?")) return;
-
-  await deleteDoc(doc(db,"orders",id));
+/* 🗑️ DELETE SINGLE ORDER */
+window.deleteOrder = async function(id) {
+  if (!confirm("Delete this order?")) return;
+  await deleteDoc(doc(db, "orders", id));
 };
 
-// 💣 DELETE ALL
-window.deleteAllOrders = async function(){
-  if(!confirm("⚠️ DELETE ALL ORDERS?\nThis cannot be undone.")) return;
+/* 💣 DELETE ALL ORDERS */
+window.deleteAllOrders = async function() {
+  if (!confirm("⚠️ DELETE ALL ORDERS?\nNo undo.")) return;
 
-  const snapshot = await getDocs(collection(db,"orders"));
+  const snapshot = await getDocs(collection(db, "orders"));
 
   const promises = snapshot.docs.map(d =>
-    deleteDoc(doc(db,"orders",d.id))
+    deleteDoc(doc(db, "orders", d.id))
   );
 
   await Promise.all(promises);
