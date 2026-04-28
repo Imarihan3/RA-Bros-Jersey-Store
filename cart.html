@@ -1,42 +1,171 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Cart</title>
+<meta charset="UTF-8">
+<title>🛒 Cart Vault</title>
+
 <style>
-body { font-family:Arial; background:#111; color:white; padding:20px; }
-.item { display:flex; margin:10px 0; }
-img { width:60px; height:60px; margin-right:10px; }
-button { margin-top:10px; padding:10px; cursor:pointer; }
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500;700&display=swap');
+
+:root {
+  --bg: #05060a;
+  --glass: rgba(255,255,255,0.05);
+  --border: rgba(255,255,255,0.1);
+  --accent: #00f2ff;
+  --danger: #ff3c5c;
+}
+
+body {
+  margin:0;
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at top, #0a0a15, #000);
+  color:white;
+}
+
+/* HEADER */
+header {
+  text-align:center;
+  padding:40px 20px;
+  border-bottom:1px solid var(--border);
+  backdrop-filter: blur(20px);
+}
+
+h1 {
+  font-family: 'Orbitron';
+  letter-spacing:6px;
+  color:var(--accent);
+}
+
+/* CONTAINER */
+.container {
+  max-width:900px;
+  margin:auto;
+  padding:30px;
+}
+
+/* ITEM */
+.item {
+  display:flex;
+  align-items:center;
+  background: var(--glass);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:15px;
+  margin-bottom:15px;
+  transition:0.3s;
+}
+
+.item:hover {
+  transform: translateY(-5px);
+  box-shadow:0 0 20px rgba(0,242,255,0.2);
+}
+
+.item img {
+  width:90px;
+  height:90px;
+  border-radius:10px;
+  object-fit:cover;
+}
+
+.info {
+  flex:1;
+  margin-left:15px;
+  font-weight:500;
+}
+
+/* REMOVE */
+.remove {
+  background:transparent;
+  border:1px solid var(--danger);
+  color:var(--danger);
+  padding:8px 14px;
+  cursor:pointer;
+  border-radius:8px;
+  transition:0.3s;
+}
+
+.remove:hover {
+  background:var(--danger);
+  color:white;
+}
+
+/* SUMMARY */
+.summary {
+  margin-top:30px;
+  padding:20px;
+  border-radius:15px;
+  background:var(--glass);
+  border:1px solid var(--border);
+}
+
+.checkout {
+  width:100%;
+  margin-top:15px;
+  padding:15px;
+  background:var(--accent);
+  border:none;
+  color:black;
+  font-weight:bold;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.checkout:hover {
+  transform:scale(1.05);
+  box-shadow:0 0 25px var(--accent);
+}
+
+.empty {
+  text-align:center;
+  opacity:0.5;
+  margin-top:50px;
+}
 </style>
 </head>
 
 <body>
 
-<h1>🛒 Your Cart</h1>
+<header>
+  <h1>CART VAULT</h1>
+</header>
 
-<div id="cart"></div>
-<button onclick="checkout()">Checkout</button>
+<div class="container">
+
+  <div id="cart"></div>
+
+  <div class="summary">
+    <h3 id="count">Items: 0</h3>
+    <button class="checkout" onclick="checkout()">Checkout 💳</button>
+  </div>
+
+</div>
 
 <script>
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 const cartDiv = document.getElementById("cart");
+const countDiv = document.getElementById("count");
 
 function renderCart(){
+  cartDiv.innerHTML = "";
+
   if(cart.length === 0){
-    cartDiv.innerHTML = "Cart empty";
+    cartDiv.innerHTML = "<div class='empty'>Your vault is empty 🕳️</div>";
+    countDiv.innerText = "Items: 0";
     return;
   }
 
-  cartDiv.innerHTML = "";
-  cart.forEach((item,i)=>{
+  cart.forEach((item,index)=>{
     cartDiv.innerHTML += `
       <div class="item">
-        <img src="${item.image}">
-        <span>${item.name}</span>
-        <button onclick="removeItem(${i})">❌</button>
+        <img src="${item.image}" onerror="this.src='https://via.placeholder.com/90'">
+        <div class="info">${item.name}</div>
+        <button class="remove" onclick="removeItem(${index})">Remove</button>
       </div>
     `;
   });
+
+  countDiv.innerText = "Items: " + cart.length;
 }
 
 function removeItem(i){
@@ -48,14 +177,16 @@ function removeItem(i){
 renderCart();
 </script>
 
+<!-- 🔥 FIREBASE CHECKOUT (FIXED) -->
 <script type="module">
 import { db, login } from "./firebase.js";
 import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 window.checkout = async function() {
+
   const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  if (currentCart.length === 0) {
+  if(currentCart.length === 0){
     alert("Cart empty ❌");
     return;
   }
@@ -65,7 +196,7 @@ window.checkout = async function() {
 
     await addDoc(collection(db, "orders"), {
       email: user.email,
-      items: currentCart, // ✅ FIXED (GROUPED)
+      items: currentCart, // ✅ GROUPED ITEMS
       status: "pending",
       time: serverTimestamp()
     });
@@ -75,10 +206,11 @@ window.checkout = async function() {
     localStorage.removeItem("cart");
     location.reload();
 
-  } catch (e) {
+  } catch(e){
     console.error(e);
-    alert("Error placing order ❌");
+    alert("Checkout failed ❌");
   }
+
 };
 </script>
 
