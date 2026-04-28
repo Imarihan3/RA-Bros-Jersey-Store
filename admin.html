@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Orders</title>
+
+<style>
+body {
+  font-family: Arial;
+  background:#0f0f0f;
+  color:white;
+  padding:20px;
+}
+
+.order {
+  border:1px solid #444;
+  padding:15px;
+  margin-bottom:20px;
+  border-radius:10px;
+  background:#1a1a1a;
+}
+
+.item {
+  display:flex;
+  align-items:center;
+  margin:10px 0;
+}
+
+.item img {
+  width:60px;
+  height:60px;
+  object-fit:cover;
+  margin-right:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📦 Admin Orders</h1>
+
+<div id="orders"></div>
+
+<script type="module">
+import { db } from "./firebase.js";
+import { collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const container = document.getElementById("orders");
+
+const q = query(collection(db, "orders"), orderBy("time", "desc"));
+
+onSnapshot(q, (snapshot) => {
+  container.innerHTML = "";
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+
+    let html = `
+      <div class="order">
+        <h3>${data.email}</h3>
+        <p>Status: ${data.status}</p>
+    `;
+
+    if (data.items && Array.isArray(data.items)) {
+      data.items.forEach(item => {
+        html += `
+          <div class="item">
+            <img src="${item.image}" onerror="this.src='https://via.placeholder.com/60'">
+            <span>${item.name}</span>
+          </div>
+        `;
+      });
+    } else {
+      html += `<p style="color:red;">⚠️ Old format data</p>`;
+    }
+
+    html += `</div>`;
+    container.innerHTML += html;
+  });
+});
+</script>
+
+</body>
+</html>
