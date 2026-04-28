@@ -37,46 +37,67 @@ body {
 <body>
 
 <h1>📦 Admin Orders</h1>
-
-<div id="orders"></div>
+<div id="orders">🔐 Authenticating...</div>
 
 <script type="module">
-import { db } from "./firebase.js";
+import { db, auth, login } from "./firebase.js";
 import { collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+const ADMIN_EMAIL = "arihan.16jan@gmail.com";
 const container = document.getElementById("orders");
 
-const q = query(collection(db, "orders"), orderBy("time", "desc"));
+// 🔐 FORCE LOGIN
+async function init() {
+  let user = auth.currentUser;
 
-onSnapshot(q, (snapshot) => {
-  container.innerHTML = "";
+  if (!user) {
+    user = await login();
+  }
 
-  snapshot.forEach(doc => {
-    const data = doc.data();
+  // ❌ BLOCK IF NOT YOU
+  if (user.email !== ADMIN_EMAIL) {
+    document.body.innerHTML = "<h2>⛔ Access Denied</h2>";
+    return;
+  }
 
-    let html = `
-      <div class="order">
-        <h3>${data.email}</h3>
-        <p>Status: ${data.status}</p>
-    `;
+  loadOrders();
+}
 
-    if (data.items && Array.isArray(data.items)) {
-      data.items.forEach(item => {
-        html += `
-          <div class="item">
-            <img src="${item.image}" onerror="this.src='https://via.placeholder.com/60'">
-            <span>${item.name}</span>
-          </div>
-        `;
-      });
-    } else {
-      html += `<p style="color:red;">⚠️ Old format data</p>`;
-    }
+// 📦 LOAD ORDERS
+function loadOrders() {
+  const q = query(collection(db, "orders"), orderBy("time", "desc"));
 
-    html += `</div>`;
-    container.innerHTML += html;
+  onSnapshot(q, (snapshot) => {
+    container.innerHTML = "";
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+
+      let html = `
+        <div class="order">
+          <h3>👤 ${data.email}</h3>
+          <p>Status: ${data.status}</p>
+      `;
+
+      if (data.items && Array.isArray(data.items)) {
+        data.items.forEach(item => {
+          html += `
+            <div class="item">
+              <img src="${item.image}" onerror="this.src='https://via.placeholder.com/60'">
+              <span>${item.name}</span>
+            </div>
+          `;
+        });
+      }
+
+      html += `</div>`;
+      container.innerHTML += html;
+    });
   });
-});
+}
+
+init();
 </script>
 
 </body>
