@@ -1,66 +1,173 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Admin Orders</title>
+<title>Admin Orders | RA Bros</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap');
+
 body {
-  font-family: Arial;
-  background:#0f0f0f;
-  color:white;
-  padding:20px;
+  font-family: 'Outfit', sans-serif;
+  background: radial-gradient(circle at top right, #1a1a1a, #050505);
+  color: #e0e0e0;
+  padding: 40px;
+  margin: 0;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+h1::before {
+  content: '';
+  width: 8px;
+  height: 40px;
+  background: #ff003c;
+  border-radius: 4px;
+}
+
+#orders {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
 }
 
 .order {
-  border:1px solid #444;
-  padding:15px;
-  margin-bottom:20px;
-  border-radius:10px;
-  background:#1a1a1a;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 25px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(10px);
+  transition: 0.3s;
+  position: relative;
+}
+
+.order:hover {
+  transform: translateY(-10px);
+  border-color: #ff003c;
+}
+
+.status {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.1);
+  display: inline-block;
+  margin-bottom: 15px;
 }
 
 .item {
-  display:flex;
-  align-items:center;
-  margin:10px 0;
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding: 8px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
 }
 
 .item img {
-  width:60px;
-  height:60px;
-  object-fit:cover;
-  margin-right:10px;
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  margin-right: 12px;
+  object-fit: cover;
+}
+
+/* 🗑️ DELETE BUTTON */
+.delete-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: 1px solid #ff003c;
+  color: #ff003c;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.delete-btn:hover {
+  background: #ff003c;
+  color: white;
+  box-shadow: 0 0 10px #ff003c;
+}
+
+.empty {
+  opacity: 0.5;
+  text-align: center;
+  grid-column: 1/-1;
+}
+
+.denied {
+  text-align: center;
+  margin-top: 100px;
+  color: #ff003c;
 }
 </style>
 </head>
 
 <body>
 
-<h1>📦 Admin Orders</h1>
+<h1>📦 Admin Console</h1>
 <div id="orders">🔐 Authenticating...</div>
 
 <script type="module">
 import { db, auth, login } from "./firebase.js";
-import { collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { 
+  collection, 
+  onSnapshot, 
+  query, 
+  orderBy,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const ADMIN_EMAIL = "arihan.16jan@gmail.com";
 const container = document.getElementById("orders");
 
-async function init() {
-  let user = auth.currentUser;
+// 🔐 AUTH
+function init() {
+  onAuthStateChanged(auth, async (user) => {
 
-  if (!user) {
-    user = await login();
-  }
+    if (!user) {
+      user = await login();
+    }
 
-  if (user.email !== ADMIN_EMAIL) {
-    document.body.innerHTML = "<h2>⛔ Access Denied</h2>";
-    return;
-  }
+    if (!user || user.email !== ADMIN_EMAIL) {
+      document.body.innerHTML = "<div class='denied'><h2>⛔ ACCESS DENIED</h2></div>";
+      return;
+    }
 
-  loadOrders();
+    loadOrders();
+  });
 }
 
+// 🗑️ DELETE FUNCTION
+window.deleteOrder = async function(id) {
+  const confirmDelete = confirm("Delete this order permanently?");
+
+  if (!confirmDelete) return;
+
+  try {
+    await deleteDoc(doc(db, "orders", id));
+    alert("Order deleted 🗑️");
+  } catch (e) {
+    console.error(e);
+    alert("Error deleting order");
+  }
+};
+
+// 📦 LOAD ORDERS
 function loadOrders() {
   const q = query(collection(db, "orders"), orderBy("time", "desc"));
 
@@ -68,36 +175,35 @@ function loadOrders() {
     container.innerHTML = "";
 
     if (snapshot.empty) {
-      container.innerHTML = "<p>No orders yet 😴</p>";
+      container.innerHTML = "<div class='empty'>No orders yet 😴</div>";
       return;
     }
 
-    snapshot.forEach(doc => {
-      const data = doc.data();
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      const id = docSnap.id;
 
       let html = `
         <div class="order">
-          <h3>👤 ${data.email || "Unknown"}</h3>
-          <p>Status: ${data.status || "pending"}</p>
+          <button class="delete-btn" onclick="deleteOrder('${id}')">DELETE</button>
+
+          <div class="status">${data.status || "pending"}</div>
+          <h3>${data.email || "Unknown User"}</h3>
       `;
 
-      // ✅ NEW STRUCTURE (MULTIPLE ITEMS)
       if (data.items && Array.isArray(data.items)) {
         data.items.forEach(item => {
           html += `
             <div class="item">
-              <img src="${item.image || 'https://via.placeholder.com/60'}">
-              <span>${item.name || "Unnamed Item"}</span>
+              <img src="${item.image || 'https://via.placeholder.com/50'}">
+              <span>${item.name}</span>
             </div>
           `;
         });
-      }
-
-      // ⚠️ OLD STRUCTURE SUPPORT (BACKUP FIX)
-      else if (data.name) {
+      } else if (data.name) {
         html += `
           <div class="item">
-            <img src="${data.image || 'https://via.placeholder.com/60'}">
+            <img src="${data.image || 'https://via.placeholder.com/50'}">
             <span>${data.name}</span>
           </div>
         `;
