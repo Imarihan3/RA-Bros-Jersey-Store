@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>The Vault | RA Bros Accessories</title>
+<title>The Accessories Vault | RA Bros Accessories</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -124,7 +124,7 @@ h1 {
 
 <div class="vault-grid">
 
-<!-- ITEM TEMPLATE (x10) -->
+<!-- ITEMS (UNCHANGED) -->
 
 <div class="item-card">
   <div class="image-wrapper">
@@ -220,19 +220,19 @@ function updateCart(){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   document.getElementById("cartBtn").innerText = "🛒 CART ("+cart.length+")";
 }
-updateCart();
 
-// ADD TO CART
+// run on load
+window.onload = updateCart;
+
+// ADD TO CART (NO QTY, NO PRICE)
 function buy(name, btn){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   const img = btn.parentElement.querySelector("img").src;
 
   cart.push({
-    name:name,
-    image:img,
-    qty:1,
-    price:999
+    name: name,
+    image: img
   });
 
   localStorage.setItem("cart", JSON.stringify(cart));
