@@ -2,110 +2,189 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>The Accessories Vault | RA Bros Accessories</title>
+<title>The Vault | RA Bros Accessories</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Premium Font -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --gold:#d4af37;
-  --neon-red:#ff0033;
-  --dark-matte:#050505;
+  --neon-red: #ff0033;
+  --dark-matte: #050505;
+  --glass: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 body {
-  margin:0;
-  font-family:'Inter',sans-serif;
-  background:var(--dark-matte);
-  color:white;
-  overflow-x:hidden;
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  background: var(--dark-matte);
+  color: white;
+  overflow-x: hidden;
 }
 
-/* Glow */
+/* Dynamic Ambient Glow */
 #glow {
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(255,0,51,0.15), transparent 50%);
-  pointer-events:none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 0, 51, 0.12), transparent 45%);
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* Header */
+/* Navigation Overlay */
+.nav-container {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 50px;
+  box-sizing: border-box;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 2px;
+  font-size: 0.8rem;
+  transition: 0.3s;
+  border-bottom: 1px solid transparent;
+}
+
+.nav-link:hover {
+  color: var(--neon-red);
+  border-bottom: 1px solid var(--neon-red);
+}
+
+/* Header Section */
 header {
-  padding:80px 20px 40px;
-  text-align:center;
+  padding: 150px 20px 60px;
+  text-align: center;
 }
 
 .logo-tag {
-  font-size:0.7rem;
-  letter-spacing:5px;
-  color:var(--neon-red);
+  font-size: 0.8rem;
+  letter-spacing: 10px;
+  color: var(--neon-red);
+  text-transform: uppercase;
+  font-weight: 300;
+  display: block;
+  margin-bottom: 10px;
 }
 
 h1 {
-  font-size:3rem;
-  font-weight:900;
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 900;
+  margin: 0;
+  text-transform: uppercase;
+  background: linear-gradient(to bottom, #fff 50%, #666);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Grid */
+/* The Grid */
 .vault-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-  gap:40px;
-  padding:40px;
-  max-width:1400px;
-  margin:auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+  padding: 40px;
+  max-width: 1400px;
+  margin: auto;
 }
 
-/* Card */
+/* The Card */
 .item-card {
-  background:#0a0a0a;
-  padding:20px;
-  transition:0.4s;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  padding: 25px;
+  transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+  overflow: hidden;
 }
 
 .item-card:hover {
-  transform:translateY(-10px);
+  transform: translateY(-15px);
+  border-color: var(--neon-red);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
 
-/* Image */
+/* Image Scanner Effect */
 .image-wrapper {
-  height:250px;
-  overflow:hidden;
+  height: 280px;
+  overflow: hidden;
+  position: relative;
+  background: #000;
 }
 
 .image-wrapper img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+  transition: 0.5s;
 }
 
-/* Button */
+.item-card:hover .image-wrapper img {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* The Red Scanner Line */
+.item-card::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--neon-red);
+  box-shadow: 0 0 15px var(--neon-red);
+  transition: 0s;
+}
+
+.item-card:hover::after {
+  top: 100%;
+  transition: 1.5s;
+}
+
+h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 20px 0;
+  height: 3em; /* Aligning titles */
+  letter-spacing: 1px;
+}
+
+/* Button Upgrades */
 .btn-buy {
-  width:100%;
-  border:1px solid var(--neon-red);
-  background:transparent;
-  color:white;
-  padding:15px;
-  cursor:pointer;
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--neon-red);
+  color: white;
+  padding: 16px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-/* Back + Cart */
-.back-btn {
-  position:fixed;
-  top:30px;
-  left:30px;
-  color:white;
-  text-decoration:none;
-  border-bottom:1px solid var(--neon-red);
+.btn-buy:hover {
+  background: var(--neon-red);
+  box-shadow: 0 0 20px rgba(255, 0, 51, 0.4);
 }
 
-.cart-btn {
-  position:fixed;
-  top:30px;
-  right:30px;
-  color:white;
-  text-decoration:none;
-  border-bottom:1px solid var(--neon-red);
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .nav-container { padding: 20px; }
+  h1 { font-size: 2.5rem; }
 }
 </style>
 </head>
@@ -114,102 +193,112 @@ h1 {
 
 <div id="glow"></div>
 
-<a href="#" class="back-btn" onclick="history.back()">EXIT</a>
-<a href="cart.html" class="cart-btn" id="cartBtn">🛒 CART (0)</a>
+<nav class="nav-container">
+  <a href="#" class="nav-link" onclick="history.back()">[ EXIT_VAULT ]</a>
+  <a href="cart.html" class="nav-link" id="cartBtn">🛒 ARCHIVE (0)</a>
+</nav>
 
 <header>
-  <span class="logo-tag">RA BROS ARCHIVE</span>
-  <h1>The Accessories Vault</h1>
+  <span class="logo-tag">RA BROS Digital Archives</span>
+  <h1>The Vault</h1>
 </header>
 
 <div class="vault-grid">
 
-<!-- ITEMS (UNCHANGED) -->
-
+<!-- Item 1 -->
 <div class="item-card">
   <div class="image-wrapper">
     <img src="https://upload.wikimedia.org/wikipedia/commons/1/10/FIFA_World_Cup_Trophy_%28Ank_Kumar%2C_Infosys_Limited%29_04.jpg">
   </div>
   <h3>FIFA World Cup Trophy</h3>
-  <button class="btn-buy" onclick="buy('FIFA World Cup Trophy', this)">Acquire</button>
+  <button class="btn-buy" onclick="buy('FIFA World Cup Trophy', this)">Acquire Asset</button>
 </div>
 
+<!-- Item 2 -->
 <div class="item-card">
   <div class="image-wrapper">
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_o4msiXzg9DpQoMatiFzNA6dhObNc1YFIMg&s">
   </div>
-  <h3>1966 Medal</h3>
-  <button class="btn-buy" onclick="buy('1966 Medal', this)">Acquire</button>
+  <h3>1966 World Cup Winner's Medal</h3>
+  <button class="btn-buy" onclick="buy('1966 Medal', this)">Acquire Asset</button>
 </div>
 
+<!-- Item 3 -->
 <div class="item-card">
   <div class="image-wrapper">
-    <img src="https://imagenes.elpais.com/resizer/v2/EITSEQUP3BHTJAUVUYMMBO65UQ.jpg">
+    <img src="https://imagenes.elpais.com/resizer/v2/EITSEQUP3BHTJAUVUYMMBO65UQ.jpg?auth=72d67f8ae7d2bfa031420d5e1b24ab0a25eda5708ad718969c3a3db68270da29&width=1200">
   </div>
-  <h3>Messi Contract</h3>
-  <button class="btn-buy" onclick="buy('Messi Contract', this)">Acquire</button>
+  <h3>Messi Signed "First Contract" Napkin</h3>
+  <button class="btn-buy" onclick="buy('Messi Contract Napkin', this)">Acquire Asset</button>
 </div>
 
+<!-- Item 4 -->
 <div class="item-card">
   <div class="image-wrapper">
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQILUKkkYVC0YFdvFeV8Uw1aCXlnlfSnt2NtQ&s">
   </div>
-  <h3>Zidane Headband</h3>
-  <button class="btn-buy" onclick="buy('Zidane Headband', this)">Acquire</button>
+  <h3>Zidane’s Signed 1998 Final Headband</h3>
+  <button class="btn-buy" onclick="buy('Zidane Headband', this)">Acquire Asset</button>
 </div>
 
+<!-- Item 5 -->
 <div class="item-card">
   <div class="image-wrapper">
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM8XmCrLjkhPCmCZUmdtUlRNUU1-3mlv5TYw&s">
   </div>
-  <h3>Rare Jersey</h3>
-  <button class="btn-buy" onclick="buy('Rare Jersey', this)">Acquire</button>
+  <h3>Match-Prepared Rare Jersey</h3>
+  <button class="btn-buy" onclick="buy('Rare Jersey', this)">Acquire Asset</button>
 </div>
 
+<!-- Item 6 -->
 <div class="item-card">
   <div class="image-wrapper">
-    <img src="https://i.ytimg.com/vi/ylsjSAsujqU/hq720.jpg">
+    <img src="https://i.ytimg.com/vi/ylsjSAsujqU/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCeyUTjMQe_xyi3ZPk-2J9oL9GMpA">
   </div>
-  <h3>Ronaldo Contract</h3>
-  <button class="btn-buy" onclick="buy('Ronaldo Contract', this)">Acquire</button>
+  <h3>Cristiano Ronaldo’s First Contract</h3>
+  <button class="btn-buy" onclick="buy('Ronaldo Contract', this)">Acquire Asset</button>
 </div>
 
+<!-- Item 7 -->
 <div class="item-card">
   <div class="image-wrapper">
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoySyk38DyNhS9kWohBbyWJfhlcFOmG3iT_w&s">
   </div>
-  <h3>Captain Armband</h3>
-  <button class="btn-buy" onclick="buy('Captain Armband', this)">Acquire</button>
+  <h3>Match-Worn Captain’s Armband</h3>
+  <button class="btn-buy" onclick="buy('Captain Armband', this)">Acquire Asset</button>
 </div>
 
+<!-- Item 8 -->
 <div class="item-card">
   <div class="image-wrapper">
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYmeuApkfPpWDbnJnsgc1y-flgaEU0vdvzyQ&s">
   </div>
-  <h3>Order of Merit</h3>
-  <button class="btn-buy" onclick="buy('Order of Merit', this)">Acquire</button>
+  <h3>The FIFA "Order of Merit" Medal</h3>
+  <button class="btn-buy" onclick="buy('Order of Merit', this)">Acquire Asset</button>
 </div>
 
+<!-- Item 9 -->
 <div class="item-card">
   <div class="image-wrapper">
-    <img src="https://holygrails.in/cdn/shop/files/CustomAirForce1xFCBarcelonaSportsThemeSneaker-PublicSides.jpg">
+    <img src="https://holygrails.in/cdn/shop/files/CustomAirForce1xFCBarcelonaSportsThemeSneaker-PublicSides.jpg?v=1770197216">
   </div>
-  <h3>Leather Sneakers</h3>
-  <button class="btn-buy" onclick="buy('Sneakers', this)">Acquire</button>
+  <h3>Leather Sneakers (Archive Edition)</h3>
+  <button class="btn-buy" onclick="buy('Sneakers', this)">Acquire Asset</button>
 </div>
 
+<!-- Item 10 -->
 <div class="item-card">
   <div class="image-wrapper">
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBgnb_6PJMWd3Dio75s7DH5BIgT8w4g3Yf7Q&s">
   </div>
-  <h3>Club Scarf</h3>
-  <button class="btn-buy" onclick="buy('Club Scarf', this)">Acquire</button>
+  <h3>Designer Club Scarf</h3>
+  <button class="btn-buy" onclick="buy('Club Scarf', this)">Acquire Asset</button>
 </div>
 
 </div>
 
 <script>
-// glow
+// glow effect
 document.addEventListener('mousemove', e=>{
   document.documentElement.style.setProperty('--x',(e.clientX/window.innerWidth)*100+'%');
   document.documentElement.style.setProperty('--y',(e.clientY/window.innerHeight)*100+'%');
@@ -218,16 +307,13 @@ document.addEventListener('mousemove', e=>{
 // update cart count
 function updateCart(){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  document.getElementById("cartBtn").innerText = "🛒 CART ("+cart.length+")";
+  document.getElementById("cartBtn").innerText = "🛒 ARCHIVE ("+cart.length+")";
 }
+updateCart();
 
-// run on load
-window.onload = updateCart;
-
-// ADD TO CART (NO QTY, NO PRICE)
+// ADD TO CART function
 function buy(name, btn){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
   const img = btn.parentElement.querySelector("img").src;
 
   cart.push({
@@ -236,10 +322,11 @@ function buy(name, btn){
   });
 
   localStorage.setItem("cart", JSON.stringify(cart));
-
   updateCart();
 
-  alert(name + " added 🛒");
+  // Custom alert style
+  console.log("Asset Logged: " + name);
+  alert("ITEM SECURED: " + name);
 }
 </script>
 
