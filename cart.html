@@ -2,91 +2,228 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>🛒 Cart Vault | RA Bros</title>
+<title>The Archive Vault | RA Bros</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Outfit:wght@300;600&display=swap" rel="stylesheet">
 
 <style>
-body {
-  margin:0;
-  font-family:Arial;
-  background:#050505;
-  color:white;
+:root {
+  --neon-red: #ff0033;
+  --neon-cyan: #00d4ff;
+  --dark-matte: #020202;
+  --panel-bg: rgba(10, 10, 10, 0.8);
+  --grid-color: rgba(255, 0, 51, 0.05);
 }
 
+body {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  background: var(--dark-matte);
+  color: white;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* --- THE BACKGROUND LAYER --- */
+.bg-layer {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1;
+  background: 
+    linear-gradient(transparent 0%, rgba(255, 0, 51, 0.1) 50%, transparent 100%),
+    var(--dark-matte);
+}
+
+/* Animated Tech Grid */
+.bg-layer::after {
+  content: "";
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 50px 50px;
+  transform: perspective(500px) rotateX(60deg);
+  animation: grid-move 20s linear infinite;
+}
+
+@keyframes grid-move {
+  from { background-position: 0 0; }
+  to { background-position: 0 1000px; }
+}
+
+/* Dynamic Cursor Glow */
+#glow {
+  position: fixed;
+  width: 100vw; height: 100vh;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 212, 255, 0.08), transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* --- UI COMPONENTS --- */
 header {
-  text-align:center;
-  padding:30px;
-  border-bottom:1px solid #222;
+  padding: 80px 20px 40px;
+  text-align: center;
+  position: relative;
+}
+
+header h1 {
+  font-family: 'Orbitron';
+  font-size: 3rem;
+  letter-spacing: 15px;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  background: linear-gradient(to bottom, #fff 30%, #444);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .container {
-  max-width:800px;
-  margin:auto;
-  padding:20px;
+  max-width: 850px;
+  margin: auto;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
 }
 
+/* Cart Item Style */
 .item {
-  display:flex;
-  align-items:center;
-  margin-bottom:20px;
-  padding:15px;
-  background:#111;
-  border-radius:12px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+  padding: 25px;
+  background: var(--panel-bg);
+  border-left: 3px solid var(--neon-red);
+  border-right: 1px solid rgba(255,255,255,0.05);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.item:hover {
+  transform: scale(1.02);
+  border-left: 3px solid var(--neon-cyan);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
 }
 
 .item img {
-  width:80px;
-  height:80px;
-  object-fit:cover;
-  border-radius:10px;
+  width: 90px; height: 90px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
 }
 
 .info {
-  flex:1;
-  margin-left:15px;
+  flex: 1;
+  margin: 0 30px;
+  font-family: 'Outfit';
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
+/* Interactive Buttons */
 button {
-  padding:8px 12px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
+  font-family: 'Orbitron';
+  cursor: pointer;
+  border: none;
+  text-transform: uppercase;
+  transition: 0.3s;
 }
 
 .remove {
-  background:#ff0033;
-  color:white;
+  background: transparent;
+  color: #555;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  padding: 10px;
+}
+
+.remove:hover {
+  color: var(--neon-red);
+  text-shadow: 0 0 10px var(--neon-red);
+}
+
+.checkout-bar {
+  margin-top: 50px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
 }
 
 .checkout {
-  width:100%;
-  padding:15px;
-  background:#00d4ff;
-  margin-top:20px;
-  font-weight:bold;
+  width: 100%;
+  padding: 25px;
+  background: #fff;
+  color: #000;
+  font-weight: 900;
+  font-size: 1.2rem;
+  letter-spacing: 5px;
+  clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
 }
+
+.checkout:hover {
+  background: var(--neon-cyan);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+}
+
+.exit-link {
+  position: fixed;
+  top: 40px; left: 40px;
+  color: #666;
+  text-decoration: none;
+  font-family: 'Orbitron';
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  z-index: 10;
+}
+
+.exit-link:hover { color: var(--neon-red); }
+
 </style>
 </head>
 
 <body>
 
-<header><h1>CART VAULT</h1></header>
+<div class="bg-layer"></div>
+<div id="glow"></div>
+
+<a href="#" class="exit-link" onclick="history.back()">[ BACK_TO_VAULT ]</a>
+
+<header>
+    <h1>ARCHIVE_VAULT</h1>
+</header>
 
 <div class="container">
   <div id="cart"></div>
-  <button class="checkout" onclick="checkout()">CHECKOUT</button>
+  
+  <div class="checkout-bar">
+    <button class="checkout" onclick="checkout()">EXECUTE_TRANSFER</button>
+  </div>
 </div>
 
 <script>
+// --- Logic ---
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 const cartDiv = document.getElementById("cart");
 
+// Mouse Glow Track
+document.addEventListener('mousemove', e => {
+    document.documentElement.style.setProperty('--x', (e.clientX / window.innerWidth) * 100 + '%');
+    document.documentElement.style.setProperty('--y', (e.clientY / window.innerHeight) * 100 + '%');
+});
+
 function renderCart(){
   cartDiv.innerHTML = "";
-
   cart = cart.filter(i => i && i.name && i.image);
 
   if(cart.length === 0){
-    cartDiv.innerHTML = "<p>Cart empty 🕳️</p>";
+    cartDiv.innerHTML = "<p style='text-align:center; opacity:0.3; letter-spacing:5px;'>NO ASSETS LOGGED</p>";
     return;
   }
 
@@ -95,7 +232,7 @@ function renderCart(){
       <div class="item">
         <img src="${item.image}">
         <div class="info">${item.name}</div>
-        <button class="remove" onclick="removeItem(${index})">Remove</button>
+        <button class="remove" onclick="removeItem(${index})">[ DELETE ]</button>
       </div>
     `;
   });
@@ -115,17 +252,11 @@ import { db, login } from "./firebase.js";
 import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 window.checkout = async function(){
-
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  if(cart.length === 0){
-    alert("Cart empty ❌");
-    return;
-  }
+  if(cart.length === 0){ alert("VAULT EMPTY ❌"); return; }
 
   try {
     const user = await login();
-
     await addDoc(collection(db, "orders"), {
       email: user.email,
       items: cart,
@@ -133,14 +264,11 @@ window.checkout = async function(){
       time: serverTimestamp()
     });
 
-    alert("Order placed 🚀");
-
+    alert("TRANSFER LOGGED IN BLOCKCHAIN 🚀");
     localStorage.removeItem("cart");
     location.reload();
-
   } catch(e){
-    console.error(e);
-    alert("Checkout failed ❌");
+    alert("CRITICAL ERROR: TRANSFER FAILED ❌");
   }
 };
 </script>
