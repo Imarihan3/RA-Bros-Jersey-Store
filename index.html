@@ -3,12 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>RA Bros Jersey Store</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
 <style>
 body { margin:0; overflow:hidden; background:#87CEEB; font-family:sans-serif; touch-action:none; }
-
 #overlay {
   position:absolute; top:0; left:0; width:100%; height:100%;
   background:rgba(0,0,0,0.8); color:white;
@@ -16,13 +13,11 @@ body { margin:0; overflow:hidden; background:#87CEEB; font-family:sans-serif; to
   align-items:center; justify-content:center;
   z-index:2000; cursor:pointer;
 }
-
 #ui {
   position:absolute; top:10px; left:10px;
   color:#fff; background:rgba(0,40,0,0.8);
   padding:15px; border-radius:10px; z-index:100;
 }
-
 #enterBtn {
   position:absolute;
   bottom:30px;
@@ -38,7 +33,6 @@ body { margin:0; overflow:hidden; background:#87CEEB; font-family:sans-serif; to
   z-index:2000;
   box-shadow: 0 0 50px #ff0033;
 }
-
 #joystick-container {
   position:absolute; bottom:50px; left:50px;
   width:120px; height:120px;
@@ -47,14 +41,12 @@ body { margin:0; overflow:hidden; background:#87CEEB; font-family:sans-serif; to
   z-index:1500;
   display:none;
 }
-
 #joystick-knob {
   position:absolute; top:30px; left:30px;
   width:60px; height:60px;
   background:rgba(255,255,255,0.5);
   border-radius:50%;
 }
-
 .label {
   position:absolute;
   color:white;
@@ -67,32 +59,26 @@ body { margin:0; overflow:hidden; background:#87CEEB; font-family:sans-serif; to
   pointer-events: none;
 }
 </style>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
-
 <body>
-
 <div id="overlay" onclick="startApp()">
   <h1>RA BROS 3D STADIUM</h1>
   <p>Move with joystick • Go near shop • Press ENTER</p>
 </div>
-
 <div id="ui">🏟️ Explore Stores</div>
-
 <button id="enterBtn">ENTER STORE</button>
-
 <div id="joystick-container">
   <div id="joystick-knob"></div>
 </div>
-
 <div id="l1" class="label">NORMAL JERSEYS</div>
 <div id="l2" class="label">LIMITED JERSEYS</div>
 <div id="l3" class="label">CUSTOM JERSEYS</div>
+<!-- Added the label for Accessories -->
+<div id="l4" class="label">ACCESSORIES</div>
 
 <script>
 window.onload = function() {
-
 let joyPos = { x: 0, y: 0 };
 let isMoving = false;
 let currentStore = null;
@@ -108,11 +94,10 @@ window.startApp = function() {
 function setupJoystick() {
   const container = document.getElementById('joystick-container');
   const knob = document.getElementById('joystick-knob');
-
   let rect;
   const centerX = 60;
   const centerY = 60;
-
+  
   function getPos(e) {
     if (e.touches && e.touches.length > 0) {
       return {
@@ -125,48 +110,43 @@ function setupJoystick() {
       y: e.clientY
     };
   }
-
+  
   function move(e) {
     if (!isMoving) return;
     if (e.cancelable) e.preventDefault();
-
     const pos = getPos(e);
-
     let x = pos.x - rect.left - centerX;
     let y = pos.y - rect.top - centerY;
-
     const dist = Math.min(Math.sqrt(x*x + y*y), 50);
     const angle = Math.atan2(y, x);
-
     x = Math.cos(angle) * dist;
     y = Math.sin(angle) * dist;
-
     knob.style.transform = `translate(${x}px, ${y}px)`;
     joyPos = { x: x/50, y: y/50 };
   }
-
+  
   container.addEventListener('touchstart', e => {
     rect = container.getBoundingClientRect();
     isMoving = true;
     move(e);
   }, { passive:false });
-
+  
   window.addEventListener('touchmove', move, { passive:false });
-
+  
   window.addEventListener('touchend', () => {
     isMoving = false;
     knob.style.transform = 'translate(0px,0px)';
     joyPos = {x:0,y:0};
   });
-
+  
   container.addEventListener('mousedown', e => {
     rect = container.getBoundingClientRect();
     isMoving = true;
     move(e);
   });
-
+  
   window.addEventListener('mousemove', move);
-
+  
   window.addEventListener('mouseup', () => {
     isMoving = false;
     knob.style.transform = 'translate(0px,0px)';
@@ -178,29 +158,28 @@ function setupJoystick() {
 function init3D() {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x87CEEB);
-
   const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
   const renderer = new THREE.WebGLRenderer({antialias:true});
   renderer.setSize(innerWidth, innerHeight);
   document.body.appendChild(renderer.domElement);
-
+  
   scene.add(new THREE.AmbientLight(0xffffff, 0.4));
   const sun = new THREE.DirectionalLight(0xffffff, 0.6);
   sun.position.set(10,20,10);
   scene.add(sun);
-
+  
   const loader = new THREE.TextureLoader();
   const grassTex = loader.load("https://threejs.org/examples/textures/terrain/grasslight-big.jpg");
   grassTex.wrapS = grassTex.wrapT = THREE.RepeatWrapping;
   grassTex.repeat.set(20,20);
-
+  
   const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(100,100),
     new THREE.MeshPhongMaterial({ map: grassTex, shininess: 10 })
   );
   floor.rotation.x = -Math.PI/2;
   scene.add(floor);
-
+  
   // --- RESTORED: Field Lines ---
   const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
   const yLine = 0.02;
@@ -208,12 +187,12 @@ function init3D() {
   centerLine.rotation.x = -Math.PI/2;
   centerLine.position.y = yLine;
   scene.add(centerLine);
-
+  
   const circle = new THREE.Mesh(new THREE.RingGeometry(9,9.5,32), lineMat);
   circle.rotation.x = -Math.PI/2;
   circle.position.y = yLine;
   scene.add(circle);
-
+  
   function box(z){
     const b = new THREE.Mesh(new THREE.PlaneGeometry(20,8), lineMat);
     b.rotation.x = -Math.PI/2;
@@ -221,7 +200,7 @@ function init3D() {
     scene.add(b);
   }
   box(40); box(-40);
-
+  
   // --- RESTORED: Goals ---
   function createGoal(x, z) {
     const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
@@ -241,27 +220,26 @@ function init3D() {
     scene.add(left, right, top, backTop, backLeft, backRight);
   }
   createGoal(0, 50); createGoal(0, -50);
-
+  
   const player = new THREE.Mesh(
     new THREE.BoxGeometry(2,2,2),
     new THREE.MeshPhongMaterial({color:0xffffff})
   );
   player.position.y = 1;
   scene.add(player);
-
+  
   const stores = [];
-
   function addStore(x, z, color, url, labelId) {
     const group = new THREE.Group();
     group.position.set(x, 0, z);
-
+    
     const disc = new THREE.Mesh(
       new THREE.CylinderGeometry(3.5, 3.5, 0.4, 32),
       new THREE.MeshPhongMaterial({ color: 0x111111 })
     );
     disc.position.y = 0.2;
     group.add(disc);
-
+    
     const ring = new THREE.Mesh(
       new THREE.TorusGeometry(3.2, 0.1, 16, 100),
       new THREE.MeshBasicMaterial({ color: color })
@@ -269,11 +247,10 @@ function init3D() {
     ring.rotation.x = Math.PI/2;
     ring.position.y = 0.41;
     group.add(ring);
-
+    
     // --- RESTORED: Ultimate Glow Hologram ---
     const holo = new THREE.Group();
     holo.position.y = 5;
-
     const geometry = new THREE.IcosahedronGeometry(2.8, 0);
     
     // Wireframe
@@ -281,7 +258,7 @@ function init3D() {
     const lineMat = new THREE.LineBasicMaterial({ color: color, linewidth: 3 });
     const lineMesh = new THREE.LineSegments(wireframe, lineMat);
     holo.add(lineMesh);
-
+    
     // Glowing Core
     const coreMat = new THREE.MeshStandardMaterial({
       color: color,
@@ -292,48 +269,51 @@ function init3D() {
     });
     const coreMesh = new THREE.Mesh(geometry, coreMat);
     holo.add(coreMesh);
-
+    
     // Blinding White Inner Core
     const innerGeo = new THREE.IcosahedronGeometry(1.8, 0);
     const innerMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
     const innerCore = new THREE.Mesh(innerGeo, innerMat);
     holo.add(innerCore);
-
+    
     group.add(holo);
-
+    
     // High Intensity PointLight hitting the grass
     const pLight = new THREE.PointLight(color, 80, 25); 
     pLight.decay = 1.5; 
     pLight.position.y = 4.5;
     group.add(pLight);
-
+    
     // Added as 'holo' so your animate loop handles it seamlessly
     group.userData = { url, label: document.getElementById(labelId), holo };
     scene.add(group);
     stores.push(group);
   }
-
+  
   addStore(-20,-20, 0xff0000, "normaljerseys.html", "l1");
   addStore(0,-35, 0x00ff00, "lejerseys.html", "l2");
   addStore(20,-20, 0x00ffff, "customisablejerseys.html", "l3");
-
+  
+  // --- ADDED: The 4th Store for Accessories (Magenta color) ---
+  addStore(0, -15, 0xff00ff, "accessories.html", "l4");
+  
   const enterBtn = document.getElementById("enterBtn");
-
+  
   /* ✅ YOUR ORIGINAL ANIMATE LOOP (Untouched) */
   function animate() {
     requestAnimationFrame(animate);
-
+    
     stores.forEach(s => {
       s.userData.holo.rotation.y += 0.02;
     });
-
+    
     if (Math.abs(joyPos.y) > 0.1) player.translateZ(joyPos.y * 0.5);
     if (Math.abs(joyPos.x) > 0.1) player.rotation.y -= joyPos.x * 0.05;
-
+    
     const camPos = new THREE.Vector3(0,8,15).applyQuaternion(player.quaternion).add(player.position);
     camera.position.lerp(camPos, 0.1);
     camera.lookAt(player.position);
-
+    
     currentStore = null;
     stores.forEach(s => {
       const dist = player.position.distanceTo(s.position);
@@ -342,16 +322,16 @@ function init3D() {
       s.userData.label.style.top = (v.y*-0.5+0.5)*innerHeight-40+'px';
       if (dist < 6) currentStore = s;
     });
-
+    
     enterBtn.style.display = currentStore ? "block" : "none";
     renderer.render(scene, camera);
   }
-
+  
   animate();
-
+  
   enterBtn.onclick = () => { if (currentStore) window.location.href = currentStore.userData.url; };
   window.onkeydown = e => { if (e.key === "Enter" && currentStore) window.location.href = currentStore.userData.url; };
-
+  
   window.addEventListener('resize', () => {
     camera.aspect = innerWidth/innerHeight;
     camera.updateProjectionMatrix();
@@ -360,6 +340,5 @@ function init3D() {
 }
 };
 </script>
-
 </body>
 </html>
