@@ -5,158 +5,100 @@
 <title>🛒 Cart Vault | RA Bros</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Outfit:wght@300;400;600&display=swap');
-
-:root {
-  --bg: #05060a;
-  --glass: rgba(255, 255, 255, 0.03);
-  --border: rgba(255, 255, 255, 0.08);
-  --accent: #00f2ff;
-  --danger: #ff3c5c;
-}
-
 body {
-  margin: 0;
-  font-family: 'Outfit', sans-serif;
-  background: radial-gradient(circle at 50% 0%, #101025 0%, #050505 100%);
-  color: white;
+  margin:0;
+  font-family:Arial;
+  background:#050505;
+  color:white;
 }
 
-/* HEADER */
 header {
-  text-align: center;
-  padding: 60px 20px;
-  border-bottom: 1px solid var(--border);
+  text-align:center;
+  padding:30px;
+  border-bottom:1px solid #222;
 }
 
-h1 {
-  font-family: 'Orbitron';
-  letter-spacing: 10px;
-  background: linear-gradient(to right, #fff, var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* CONTAINER */
 .container {
-  max-width: 800px;
-  margin: auto;
-  padding: 40px 20px;
+  max-width:800px;
+  margin:auto;
+  padding:20px;
 }
 
-/* ITEM */
 .item {
-  display: flex;
-  align-items: center;
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 20px;
-  margin-bottom: 20px;
+  display:flex;
+  align-items:center;
+  margin-bottom:20px;
+  padding:15px;
+  background:#111;
+  border-radius:12px;
 }
 
 .item img {
-  width: 100px;
-  height: 100px;
-  border-radius: 12px;
-  object-fit: cover;
+  width:80px;
+  height:80px;
+  object-fit:cover;
+  border-radius:10px;
 }
 
 .info {
-  flex: 1;
-  margin-left: 20px;
-  font-size: 1.2rem;
+  flex:1;
+  margin-left:15px;
 }
 
-/* REMOVE */
+button {
+  padding:8px 12px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
 .remove {
-  border: 1px solid var(--danger);
-  color: var(--danger);
-  padding: 10px;
-  background: transparent;
-  cursor: pointer;
-}
-
-/* SUMMARY */
-.summary {
-  margin-top: 40px;
-  padding: 30px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  text-align: center;
+  background:#ff0033;
+  color:white;
 }
 
 .checkout {
-  width: 100%;
-  padding: 18px;
-  background: var(--accent);
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.checkout:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.empty {
-  text-align: center;
-  opacity: 0.5;
-  margin-top: 60px;
+  width:100%;
+  padding:15px;
+  background:#00d4ff;
+  margin-top:20px;
+  font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>CART VAULT</h1>
-</header>
+<header><h1>CART VAULT</h1></header>
 
 <div class="container">
-
-<div id="cart"></div>
-
-<div class="summary" id="summary">
-<h3 id="count">ITEMS IN SECURE HOLD: 0</h3>
-<button class="checkout" id="checkoutBtn" onclick="checkout()">INITIATE PURCHASE 💳</button>
-</div>
-
+  <div id="cart"></div>
+  <button class="checkout" onclick="checkout()">CHECKOUT</button>
 </div>
 
 <script>
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 const cartDiv = document.getElementById("cart");
-const countDiv = document.getElementById("count");
-const summaryDiv = document.getElementById("summary");
 
 function renderCart(){
   cartDiv.innerHTML = "";
 
-  // ❌ invalid filter safety
   cart = cart.filter(i => i && i.name && i.image);
 
   if(cart.length === 0){
-    cartDiv.innerHTML = "<div class='empty'>THE VAULT IS EMPTY 🕳️</div>";
-    countDiv.innerText = "ITEMS IN SECURE HOLD: 0";
-    summaryDiv.style.display = "none";
+    cartDiv.innerHTML = "<p>Cart empty 🕳️</p>";
     return;
   }
-
-  summaryDiv.style.display = "block";
 
   cart.forEach((item,index)=>{
     cartDiv.innerHTML += `
       <div class="item">
-        <img src="${item.image}" onerror="this.src='https://via.placeholder.com/90'">
+        <img src="${item.image}">
         <div class="info">${item.name}</div>
         <button class="remove" onclick="removeItem(${index})">Remove</button>
       </div>
     `;
   });
-
-  countDiv.innerText = "ITEMS IN SECURE HOLD: " + cart.length;
 }
 
 function removeItem(i){
@@ -172,35 +114,26 @@ renderCart();
 import { db, login } from "./firebase.js";
 import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const btn = document.getElementById("checkoutBtn");
-
 window.checkout = async function(){
 
-  let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  if(currentCart.length === 0){
-    alert("Vault empty ❌");
+  if(cart.length === 0){
+    alert("Cart empty ❌");
     return;
   }
-
-  btn.disabled = true;
-  btn.innerText = "PROCESSING...";
 
   try {
     const user = await login();
 
-    if(!user || !user.email){
-      throw new Error("User not authenticated");
-    }
-
     await addDoc(collection(db, "orders"), {
       email: user.email,
-      items: currentCart,
+      items: cart,
       status: "pending",
       time: serverTimestamp()
     });
 
-    alert("ORDER SENT 🚀");
+    alert("Order placed 🚀");
 
     localStorage.removeItem("cart");
     location.reload();
@@ -208,9 +141,6 @@ window.checkout = async function(){
   } catch(e){
     console.error(e);
     alert("Checkout failed ❌");
-
-    btn.disabled = false;
-    btn.innerText = "INITIATE PURCHASE 💳";
   }
 };
 </script>
